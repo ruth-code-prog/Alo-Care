@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "653483800435",
+    "firebase_url": "https://ramah-9ef47.firebaseio.com",
+    "project_id": "ramah-9ef47",
+    "storage_bucket": "ramah-9ef47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653483800435:android:7e9221fb5bceaaca78f706",
+        "android_client_info": {
+          "package_name": "com.adminac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcigtRanuPxRXvtTB70niKk9bjEx65o7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653483800435:android:39e273192e16435278f706",
+        "android_client_info": {
+          "package_name": "com.alocare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcigtRanuPxRXvtTB70niKk9bjEx65o7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653483800435:android:9087291532a42f6678f706",
+        "android_client_info": {
+          "package_name": "com.aloocare.alocare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcigtRanuPxRXvtTB70niKk9bjEx65o7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653483800435-cogo949mjhfql9nj5s3mj0n88qdqd64a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
