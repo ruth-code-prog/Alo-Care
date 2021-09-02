@@ -47,7 +47,14 @@ const OurStaff = ({ navigation }) => {
   const [userTempo3, setUserTempo3] = useState(null);
   const [products, setProducts] = useState([]);
   const [productsAll, setProductsAll] = useState([]);
+  const [products2, setProducts2] = useState([]);
+  const [productsAll2, setProducts2All] = useState([]);
+  const [products3, setProducts3] = useState([]);
+  const [productsAll3, setProducts3All] = useState([]);
   const [searchProductLoading, setSearchProductLoading] = useState(false);
+  const [searchProduct2Loading, setSearchProduct2Loading] = useState(false);
+  const [searchProduct3Loading, setSearchProduct3Loading] = useState(false);
+
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
 
@@ -311,8 +318,12 @@ const OurStaff = ({ navigation }) => {
       });
   };
 
-  const getProducts = () => {
-    Fire.database()
+  const getProducts = async () => {
+    setSearchProductLoading(true);
+    setSearchProduct2Loading(true);
+    setSearchProduct3Loading(true);
+
+    await Fire.database()
       .ref("produk")
       .once("value")
       .then((res) => {
@@ -323,6 +334,32 @@ const OurStaff = ({ navigation }) => {
       .catch((err) => {
         console.error(err);
       });
+    await Fire.database()
+      .ref("produk2")
+      .once("value")
+      .then((res) => {
+        const arr = [...res.val()];
+        setProducts2(arr.filter((val) => val !== null));
+        setProducts2All(arr.filter((val) => val !== null));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    await Fire.database()
+      .ref("produk3")
+      .once("value")
+      .then((res) => {
+        const arr = [...res.val()];
+        setProducts3(arr.filter((val) => val !== null));
+        setProducts3All(arr.filter((val) => val !== null));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setSearchProductLoading(false);
+    setSearchProduct2Loading(false);
+    setSearchProduct3Loading(false);
   };
 
   const getBanners = () => {
@@ -414,15 +451,35 @@ const OurStaff = ({ navigation }) => {
     Linking.openURL("https://" + url);
   };
 
-  const handleFilter = (val) => {
-    setSearchProductLoading(true);
-    let arr = [...productsAll];
-    var searchRegex = new RegExp(val, "i");
-    arr = arr.filter((item) => searchRegex?.test(item?.title));
-    setProducts(arr);
-    setTimeout(() => {
-      setSearchProductLoading(false);
-    }, 1500);
+  const handleFilter = (val, productType) => {
+    if (productType === "1") {
+      setSearchProductLoading(true);
+      let arr = [...productsAll];
+      var searchRegex = new RegExp(val, "i");
+      arr = arr.filter((item) => searchRegex?.test(item?.title));
+      setProducts(arr);
+      setTimeout(() => {
+        setSearchProductLoading(false);
+      }, 1500);
+    } else if (productType === "2") {
+      setSearchProduct2Loading(true);
+      let arr = [...productsAll2];
+      var searchRegex = new RegExp(val, "i");
+      arr = arr.filter((item) => searchRegex?.test(item?.title));
+      setProducts2(arr);
+      setTimeout(() => {
+        setSearchProduct2Loading(false);
+      }, 1500);
+    } else if (productType === "3") {
+      setSearchProduct3Loading(true);
+      let arr = [...productsAll3];
+      var searchRegex = new RegExp(val, "i");
+      arr = arr.filter((item) => searchRegex?.test(item?.title));
+      setProducts3(arr);
+      setTimeout(() => {
+        setSearchProduct3Loading(false);
+      }, 1500);
+    }
   };
 
   return (
@@ -589,19 +646,20 @@ const OurStaff = ({ navigation }) => {
             </Text>
           </MemoTouchableOpacity>
 
-          <Text
-            style={{
-              marginTop: 10,
-              fontWeight: "bold",
-              color: "#2d3436",
-              marginHorizontal: 10,
-            }}
-          >
-            Produk
-          </Text>
           <View>
+            <Text
+              style={{
+                marginTop: 10,
+                fontWeight: "bold",
+                color: "#2d3436",
+                marginHorizontal: 10,
+              }}
+            >
+              Produk
+            </Text>
+            <Gap height={16} />
             <TextInput
-              onChangeText={handleFilter}
+              onChangeText={(val) => handleFilter(val, "1")}
               selectTextOnFocus
               style={styles.searchInput}
               placeholder="Cari Produk"
@@ -613,9 +671,207 @@ const OurStaff = ({ navigation }) => {
             style={{ marginTop: 10, paddingHorizontal: 10 }}
           >
             {searchProductLoading ? (
-              <ActivityIndicator size={40} color={colors.primary} style={{marginVertical: 40, marginLeft: 40}} />
+              <ActivityIndicator
+                size={40}
+                color={colors.primary}
+                style={{ marginVertical: 40, marginLeft: 40 }}
+              />
             ) : (
               products?.map((item, index) => (
+                <View
+                  key={index}
+                  style={[
+                    {
+                      width: 300,
+                      borderRadius: 10,
+                      marginRight: 10,
+                      marginBottom: 24,
+                    },
+                    styles.shadow,
+                  ]}
+                >
+                  <Image
+                    source={{
+                      uri: item?.image || "",
+                    }}
+                    style={{
+                      width: 300,
+                      height: 200,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      padding: 20,
+                      backgroundColor: "white",
+                      borderBottomRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.lokasi}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#2d3436",
+                        marginTop: 8,
+                      }}
+                    >
+                      {item?.title}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      ellipsizeMode={"tail"}
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.desc}
+                    </Text>
+                  </View>
+                </View>
+              ))
+            )}
+          </ScrollView>
+          <View>
+            <Text
+              style={{
+                marginTop: 10,
+                fontWeight: "bold",
+                color: "#2d3436",
+                marginHorizontal: 10,
+              }}
+            >
+              Produk 2
+            </Text>
+            <Gap height={16} />
+            <TextInput
+              onChangeText={(val) => handleFilter(val, "2")}
+              selectTextOnFocus
+              style={styles.searchInput}
+              placeholder="Cari Produk"
+            />
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: 10, paddingHorizontal: 10 }}
+          >
+            {searchProduct2Loading ? (
+              <ActivityIndicator
+                size={40}
+                color={colors.primary}
+                style={{ marginVertical: 40, marginLeft: 40 }}
+              />
+            ) : (
+              products2?.map((item, index) => (
+                <View
+                  key={index}
+                  style={[
+                    {
+                      width: 300,
+                      borderRadius: 10,
+                      marginRight: 10,
+                      marginBottom: 24,
+                    },
+                    styles.shadow,
+                  ]}
+                >
+                  <Image
+                    source={{
+                      uri: item?.image || "",
+                    }}
+                    style={{
+                      width: 300,
+                      height: 200,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      padding: 20,
+                      backgroundColor: "white",
+                      borderBottomRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.lokasi}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#2d3436",
+                        marginTop: 8,
+                      }}
+                    >
+                      {item?.title}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      ellipsizeMode={"tail"}
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.desc}
+                    </Text>
+                  </View>
+                </View>
+              ))
+            )}
+          </ScrollView>
+          <View>
+            <Text
+              style={{
+                marginTop: 10,
+                fontWeight: "bold",
+                color: "#2d3436",
+                marginHorizontal: 10,
+              }}
+            >
+              Produk 3
+            </Text>
+            <Gap height={16} />
+            <TextInput
+              onChangeText={(val) => handleFilter(val, "3")}
+              selectTextOnFocus
+              style={styles.searchInput}
+              placeholder="Cari Produk"
+            />
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: 10, paddingHorizontal: 10 }}
+          >
+            {searchProduct3Loading ? (
+              <ActivityIndicator
+                size={40}
+                color={colors.primary}
+                style={{ marginVertical: 40, marginLeft: 40 }}
+              />
+            ) : (
+              products3?.map((item, index) => (
                 <View
                   key={index}
                   style={[
