@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   Linking,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -25,6 +27,9 @@ import {
 import { Fire } from "../../config";
 import { colors, fonts, getData, showError, storeData } from "../../utils";
 
+const MemoView = memo(View);
+const MemoTouchableOpacity = memo(TouchableOpacity);
+
 const OurStaff = ({ navigation }) => {
   const [news, setNews] = useState([]);
   const [web, setWeb] = useState([]);
@@ -41,6 +46,8 @@ const OurStaff = ({ navigation }) => {
   const [userTagihan3, setUserTagihan3] = useState(null);
   const [userTempo3, setUserTempo3] = useState(null);
   const [products, setProducts] = useState([]);
+  const [productsAll, setProductsAll] = useState([]);
+  const [searchProductLoading, setSearchProductLoading] = useState(false);
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
 
@@ -311,6 +318,7 @@ const OurStaff = ({ navigation }) => {
       .then((res) => {
         const arr = [...res.val()];
         setProducts(arr.filter((val) => val !== null));
+        setProductsAll(arr.filter((val) => val !== null));
       })
       .catch((err) => {
         console.error(err);
@@ -350,7 +358,10 @@ const OurStaff = ({ navigation }) => {
       let listNews = news.map((item) => {
         if (item) {
           return (
-            <TouchableOpacity onPress={() => openNews(item.link)} key={item.id}>
+            <MemoTouchableOpacity
+              onPress={() => openNews(item.link)}
+              key={item.id}
+            >
               <NewsItem
                 key={item.id}
                 title={item.title}
@@ -358,7 +369,7 @@ const OurStaff = ({ navigation }) => {
                 date={item.date}
                 image={item.image}
               />
-            </TouchableOpacity>
+            </MemoTouchableOpacity>
           );
         }
       });
@@ -374,7 +385,10 @@ const OurStaff = ({ navigation }) => {
       let listweb = web.map((item) => {
         if (item) {
           return (
-            <TouchableOpacity onPress={() => openWeb(item.link)} key={item.id}>
+            <MemoTouchableOpacity
+              onPress={() => openWeb(item.link)}
+              key={item.id}
+            >
               <WebItem
                 key={item.id}
                 title={item.title}
@@ -382,7 +396,7 @@ const OurStaff = ({ navigation }) => {
                 date={item.date}
                 image={item.image}
               />
-            </TouchableOpacity>
+            </MemoTouchableOpacity>
           );
         }
       });
@@ -400,13 +414,24 @@ const OurStaff = ({ navigation }) => {
     Linking.openURL("https://" + url);
   };
 
+  const handleFilter = (val) => {
+    setSearchProductLoading(true);
+    let arr = [...productsAll];
+    var searchRegex = new RegExp(val, "i");
+    arr = arr.filter((item) => searchRegex?.test(item?.title));
+    setProducts(arr);
+    setTimeout(() => {
+      setSearchProductLoading(false);
+    }, 1500);
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.wrapperSection}>
+          <MemoView style={styles.wrapperSection}>
             <Gap height={30} />
-            <View style={styles.row}>
+            <MemoView style={styles.row}>
               <HomeProfile
                 profile={profile}
                 onPress={() => navigation.navigate("UserProfile", profile)}
@@ -425,17 +450,17 @@ const OurStaff = ({ navigation }) => {
               <Text style={styles.point}>
                 {CurrencyFormatter(userPoint !== null ? userPoint.point : 0)}
               </Text>
-            </View>
+            </MemoView>
 
             {banners?.length > 0 ? <BannerSlider data={banners} /> : null}
 
-            <View style={styles.runningTextContainer}>
+            <MemoView style={styles.runningTextContainer}>
               <Image
                 style={styles.runningTextLogo}
                 source={require("../../assets/images/megaphone.png")}
               />
               {runningText ? (
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <TextTicker
                     style={{
                       fontSize: 16,
@@ -450,13 +475,13 @@ const OurStaff = ({ navigation }) => {
                   </TextTicker>
                 </View>
               ) : null}
-            </View>
+            </MemoView>
 
             <Text style={styles.welcome}>
               Silahkan memilih Staff dan Layanan Kami
             </Text>
-          </View>
-          <View style={styles.wrapperScroll}>
+          </MemoView>
+          <MemoView style={styles.wrapperScroll}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
                 <Gap width={32} />
@@ -474,8 +499,8 @@ const OurStaff = ({ navigation }) => {
                 <Gap width={22} />
               </View>
             </ScrollView>
-          </View>
-          <View style={styles.wrapperSection}>
+          </MemoView>
+          <MemoView style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Top Our Staff</Text>
             {ourstaffs.map((ourstaff) => {
               return (
@@ -491,7 +516,7 @@ const OurStaff = ({ navigation }) => {
               );
             })}
             <Text style={styles.sectionLabel}>Video Info and Trending</Text>
-          </View>
+          </MemoView>
           {renderNews()}
           <View style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Web</Text>
@@ -501,7 +526,7 @@ const OurStaff = ({ navigation }) => {
           <Text style={styles.transaksi}>Transaksi</Text>
           <Text style={styles.pm}>Pembiayaan Multiguna</Text>
           <View style={styles.garis} />
-          <View style={styles.tagihan1}>
+          <MemoView style={styles.tagihan1}>
             <View style={styles.wrapper1}>
               <Text selectable={true} style={styles.titleTagihan}>
                 Tenor : {userTenor1 !== null ? userTenor1.tenor1 : 0}
@@ -549,8 +574,8 @@ const OurStaff = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.garis} />
-          </View>
-          <TouchableOpacity
+          </MemoView>
+          <MemoTouchableOpacity
             onPress={() => Linking.openURL("https://wa.me/+62895600394345")}
           >
             <Image
@@ -562,7 +587,7 @@ const OurStaff = ({ navigation }) => {
             <Text style={{ marginLeft: 16 }}>
               Klik (sentuh di sini) lanjut ke whatsapp
             </Text>
-          </TouchableOpacity>
+          </MemoTouchableOpacity>
 
           <Text
             style={{
@@ -574,75 +599,87 @@ const OurStaff = ({ navigation }) => {
           >
             Produk
           </Text>
+          <View>
+            <TextInput
+              onChangeText={handleFilter}
+              selectTextOnFocus
+              style={styles.searchInput}
+              placeholder="Cari Produk"
+            />
+          </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={{ marginTop: 10, paddingHorizontal: 10 }}
           >
-            {products?.map((item, index) => (
-              <View
-                key={index}
-                style={[
-                  {
-                    width: 300,
-                    borderRadius: 10,
-                    marginRight: 10,
-                    marginBottom: 24,
-                  },
-                  styles.shadow,
-                ]}
-              >
-                <Image
-                  source={{
-                    uri: item?.image || "",
-                  }}
-                  style={{
-                    width: 300,
-                    height: 200,
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10,
-                  }}
-                />
+            {searchProductLoading ? (
+              <ActivityIndicator size={40} color={colors.primary} style={{marginVertical: 40, marginLeft: 40}} />
+            ) : (
+              products?.map((item, index) => (
                 <View
-                  style={{
-                    padding: 20,
-                    backgroundColor: "white",
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                  }}
+                  key={index}
+                  style={[
+                    {
+                      width: 300,
+                      borderRadius: 10,
+                      marginRight: 10,
+                      marginBottom: 24,
+                    },
+                    styles.shadow,
+                  ]}
                 >
-                  <Text
+                  <Image
+                    source={{
+                      uri: item?.image || "",
+                    }}
                     style={{
-                      fontSize: 10,
-                      fontWeight: "300",
-                      color: "#636e72",
+                      width: 300,
+                      height: 200,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      padding: 20,
+                      backgroundColor: "white",
+                      borderBottomRightRadius: 10,
+                      borderBottomLeftRadius: 10,
                     }}
                   >
-                    {item?.lokasi}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: "#2d3436",
-                      marginTop: 8,
-                    }}
-                  >
-                    {item?.title}
-                  </Text>
-                  <Text
-                    numberOfLines={3}
-                    ellipsizeMode={"tail"}
-                    style={{
-                      fontSize: 10,
-                      fontWeight: "300",
-                      color: "#636e72",
-                    }}
-                  >
-                    {item?.desc}
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.lokasi}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#2d3436",
+                        marginTop: 8,
+                      }}
+                    >
+                      {item?.title}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      ellipsizeMode={"tail"}
+                      style={{
+                        fontSize: 10,
+                        fontWeight: "300",
+                        color: "#636e72",
+                      }}
+                    >
+                      {item?.desc}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))
+            )}
           </ScrollView>
         </ScrollView>
       </View>
@@ -663,6 +700,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 4,
+  },
+  searchInput: {
+    borderWidth: 1,
+    marginHorizontal: 12,
+    borderRadius: 5,
+    borderColor: colors.border,
   },
   runningTextContainer: {
     flexDirection: "row",
