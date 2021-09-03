@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { colors, fonts } from "../../../utils";
 import { DummyDoctor9 } from "../../../assets";
 
@@ -12,7 +12,10 @@ const Other = ({ text, date, photo, type }) => {
           {type === "photo" ? (
             <Image
               source={{ uri: text }}
-              style={{ width: "50%", height: 240 }}
+              style={{
+                width: Dimensions.get("screen").width / 2.5,
+                height: 240,
+              }}
               resizeMode="cover"
             />
           ) : (

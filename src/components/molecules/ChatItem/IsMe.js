@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Dimensions,
   Image,
   Modal,
   StyleSheet,
@@ -22,7 +23,10 @@ const IsMe = ({ text, date, type }) => {
           >
             <Image
               source={{ uri: text }}
-              style={{ width: 200, height: 240 }}
+              style={{
+                width: Dimensions.get("screen").width / 3,
+                height: 240,
+              }}
               resizeMode="cover"
             />
           </TouchableOpacity>
