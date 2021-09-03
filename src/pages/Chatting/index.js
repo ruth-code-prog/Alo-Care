@@ -234,7 +234,7 @@ const Chatting = ({ navigation, route }) => {
         value={chatContent}
         onUploadPress={getImage}
         onChangeText={(value) => setChatContent(value)}
-        onButtonPress={chatSend}
+        onButtonPress={() => chatSend()}
         targetChat={dataOurstaff}
       />
     </View>
