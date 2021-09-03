@@ -56,6 +56,7 @@ const Messages = ({navigation}) => {
               profile={{uri: chat.detailOurstaff.photo}}
               name={chat.detailOurstaff.fullName}
               desc={chat.lastContentChat}
+              type={chat?.type}
               onPress={() => navigation.navigate('Chatting', dataOurstaff)}
             />
           );

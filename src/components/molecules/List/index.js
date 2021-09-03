@@ -1,26 +1,28 @@
-import React from 'react';
-import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {colors, fonts} from '../../../utils';
+import React from "react";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { colors, fonts } from "../../../utils";
 import {
   IconNext,
   IconEditProfile,
   IconLanguage,
   IconRate,
   IconHelp,
-} from '../../../assets';
+  IconCamera,
+} from "../../../assets";
+import { Gap } from "../../atoms";
 
-const List = ({profile, name, desc, type, onPress, icon}) => {
+const List = ({ profile, name, desc, type, onPress, icon }) => {
   const Icon = () => {
-    if (icon === 'edit-profile') {
+    if (icon === "edit-profile") {
       return <IconEditProfile />;
     }
-    if (icon === 'language') {
+    if (icon === "language") {
       return <IconLanguage />;
     }
-    if (icon === 'rate') {
+    if (icon === "rate") {
       return <IconRate />;
     }
-    if (icon === 'help') {
+    if (icon === "help") {
       return <IconHelp />;
     }
     return <IconEditProfile />;
@@ -30,9 +32,17 @@ const List = ({profile, name, desc, type, onPress, icon}) => {
       {icon ? <Icon /> : <Image source={profile} style={styles.avatar} />}
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.desc}>{desc}</Text>
+        {type === "photo" ? (
+          <View style={styles.imageContainer}>
+            <IconCamera />
+            <Gap width={4} />
+            <Text style={styles.desc}>Image</Text>
+          </View>
+        ) : (
+          <Text style={styles.desc}>{desc}</Text>
+        )}
       </View>
-      {type === 'next' && <IconNext />}
+      {type === "next" && <IconNext />}
     </TouchableOpacity>
   );
 };
@@ -41,15 +51,20 @@ export default List;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  content: {flex: 1, marginLeft: 16},
-  avatar: {width: 46, height: 46, borderRadius: 46 / 2},
+  imageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  content: { flex: 1, marginLeft: 16 },
+  avatar: { width: 46, height: 46, borderRadius: 46 / 2 },
   name: {
     fontSize: 16,
     fontFamily: fonts.primary.normal,
@@ -59,6 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: fonts.primary[300],
     color: colors.text.secondary,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
 });

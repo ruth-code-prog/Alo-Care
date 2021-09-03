@@ -1,9 +1,9 @@
-import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {IconSendDark, IconSendLight} from '../../../assets';
-import {colors} from '../../../utils';
+import React from "react";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { IconSendDark, IconSendLight, IconCamera } from "../../../assets";
+import { colors } from "../../../utils";
 
-const BtnIconSend = ({disable, onPress}) => {
+const BtnIconSend = ({ disable, onPress, type }) => {
   if (disable) {
     return (
       <View style={styles.container(disable)}>
@@ -21,7 +21,7 @@ const BtnIconSend = ({disable, onPress}) => {
 export default BtnIconSend;
 
 const styles = StyleSheet.create({
-  container: disable => ({
+  container: (disable) => ({
     backgroundColor: disable ? colors.disable : colors.tertiary,
     width: 45,
     height: 45,

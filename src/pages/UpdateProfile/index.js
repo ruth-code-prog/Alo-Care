@@ -1,27 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import ImagePicker from 'react-native-image-picker';
-import {ILNullPhoto} from '../../assets';
-import {Button, Gap, Header, Input, Profile} from '../../components';
-import {Fire} from '../../config';
-import {colors, getData, showError, storeData} from '../../utils';
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
+import { ILNullPhoto } from "../../assets";
+import { Button, Gap, Header, Input, Profile } from "../../components";
+import { Fire } from "../../config";
+import { colors, getData, showError, storeData } from "../../utils";
 
-const UpdateProfile = ({navigation}) => {
+const UpdateProfile = ({ navigation }) => {
   const [profile, setProfile] = useState({
-    fullName: '',
-    profession: '',
-    email: '',
+    fullName: "",
+    profession: "",
+    email: "",
   });
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [photo, setPhoto] = useState(ILNullPhoto);
-  const [photoForDB, setPhotoForDB] = useState('');
+  const [photoForDB, setPhotoForDB] = useState("");
 
   useEffect(() => {
-    getData('user').then(res => {
+    getData("user").then((res) => {
       const data = res;
       data.photoForDB = res?.photo?.length > 1 ? res.photo : ILNullPhoto;
       setPhotoForDB(res?.photo?.length > 1 ? res.photo : ILNullPhoto);
-      const tempPhoto = res?.photo?.length > 1 ? {uri: res.photo} : ILNullPhoto;
+      const tempPhoto =
+        res?.photo?.length > 1 ? { uri: res.photo } : ILNullPhoto;
       setPhoto(tempPhoto);
       setProfile(data);
     });
@@ -30,7 +31,7 @@ const UpdateProfile = ({navigation}) => {
   const update = () => {
     if (password.length > 0) {
       if (password.length < 6) {
-        showError('Password kurang dari 6 karater');
+        showError("Password kurang dari 6 karater");
       } else {
         updatePassword();
         updateProfileData();
@@ -41,9 +42,9 @@ const UpdateProfile = ({navigation}) => {
   };
 
   const updatePassword = () => {
-    Fire.auth().onAuthStateChanged(user => {
+    Fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        user.updatePassword(password).catch(err => {
+        user.updatePassword(password).catch((err) => {
           showError(err.message);
         });
       }
@@ -57,15 +58,15 @@ const UpdateProfile = ({navigation}) => {
       .ref(`users/${profile.uid}/`)
       .update(data)
       .then(() => {
-        storeData('user', data)
+        storeData("user", data)
           .then(() => {
-            navigation.replace('MainApp');
+            navigation.replace("MainApp");
           })
           .catch(() => {
-            showError('Terjadi Masalah');
+            showError("Terjadi Masalah");
           });
       })
-      .catch(err => {
+      .catch((err) => {
         showError(err.message);
       });
   };
@@ -78,18 +79,17 @@ const UpdateProfile = ({navigation}) => {
   };
 
   const getImage = () => {
-    ImagePicker.launchImageLibrary(
-      {quality: 0.5, maxWidth: 200, maxHeight: 200},
-      response => {
+    launchImageLibrary(
+      { quality: 0.5, maxWidth: 200, maxHeight: 200, includeBase64: true },
+      (response) => {
         if (response.didCancel || response.error) {
-          showError('oops, sepertinya anda tidak memilih foto nya?');
+          showError("oops, sepertinya anda tidak memilih foto nya?");
         } else {
-          const source = {uri: response.uri};
-
-          setPhotoForDB(`data:${response.type};base64, ${response.data}`);
+          const source = { uri: response.uri };
+          setPhotoForDB(`data:${response.type};base64, ${response.base64}`);
           setPhoto(source);
         }
-      },
+      }
     );
   };
   return (
@@ -102,13 +102,13 @@ const UpdateProfile = ({navigation}) => {
           <Input
             label="Nama Lengkap"
             value={profile.fullName}
-            onChangeText={value => changeText('fullName', value)}
+            onChangeText={(value) => changeText("fullName", value)}
           />
           <Gap height={24} />
           <Input
             label="Pekerjaan"
             value={profile.profession}
-            onChangeText={value => changeText('profession', value)}
+            onChangeText={(value) => changeText("profession", value)}
           />
           <Gap height={24} />
           <Input label="Email" value={profile.email} disable />
@@ -117,7 +117,7 @@ const UpdateProfile = ({navigation}) => {
             label="Password"
             secureTextEntry
             value={password}
-            onChangeText={value => setPassword(value)}
+            onChangeText={(value) => setPassword(value)}
           />
           <Gap height={40} />
           <Button title="Simpan Profile" onPress={update} />
@@ -130,6 +130,6 @@ const UpdateProfile = ({navigation}) => {
 export default UpdateProfile;
 
 const styles = StyleSheet.create({
-  page: {backgroundColor: colors.white, flex: 1},
-  content: {padding: 40, paddingTop: 0},
+  page: { backgroundColor: colors.white, flex: 1 },
+  content: { padding: 40, paddingTop: 0 },
 });

@@ -1,14 +1,14 @@
-export const getChatTime = date => {
+export const getChatTime = (date) => {
   const hour = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${hour}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`;
+  return `${hour}:${minutes} ${hour >= 12 ? "PM" : "AM"}`;
 };
 
-export const setDateChat = oldDate => {
+export const setDateChat = (oldDate) => {
   const year = oldDate.getFullYear();
-  const month = oldDate.getMonth() + 1;
-  const date = oldDate.getDate();
+  const month = ("0" + (oldDate.getMonth() + 1)).slice(-2);
+  const date = ("0" + oldDate.getDate()).slice(-2);
 
   return `${year}-${month}-${date}`;
 };

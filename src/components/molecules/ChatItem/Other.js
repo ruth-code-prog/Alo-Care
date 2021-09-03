@@ -1,15 +1,23 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import {colors, fonts} from '../../../utils';
-import {DummyDoctor9} from '../../../assets';
+import React from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { colors, fonts } from "../../../utils";
+import { DummyDoctor9 } from "../../../assets";
 
-const Other = ({text, date, photo}) => {
+const Other = ({ text, date, photo, type }) => {
   return (
     <View style={styles.container}>
       <Image source={photo} style={styles.avatar} />
       <View>
         <View style={styles.chatContent}>
-          <Text style={styles.text}>{text}</Text>
+          {type === "photo" ? (
+            <Image
+              source={{ uri: text }}
+              style={{ width: "50%", height: 240 }}
+              resizeMode="cover"
+            />
+          ) : (
+            <Text style={styles.text}>{text}</Text>
+          )}
         </View>
         <Text style={styles.date}>{date}</Text>
       </View>
@@ -22,16 +30,16 @@ export default Other;
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     paddingLeft: 16,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
-  avatar: {width: 30, height: 30, borderRadius: 30 / 2, marginRight: 12},
+  avatar: { width: 30, height: 30, borderRadius: 30 / 2, marginRight: 12 },
   chatContent: {
     padding: 12,
     paddingRight: 40,
     backgroundColor: colors.primary,
-    maxWidth: '100%',
+    maxWidth: "100%",
     borderRadius: 10,
     borderBottomLeftRadius: 0,
   },

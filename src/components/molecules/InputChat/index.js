@@ -1,9 +1,15 @@
-import React from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {colors, fonts} from '../../../utils';
-import {Button} from '../../atoms';
+import React from "react";
+import { StyleSheet, TextInput, View } from "react-native";
+import { colors, fonts } from "../../../utils";
+import { Button } from "../../atoms";
 
-const InputChat = ({value, onChangeText, onButtonPress, targetChat}) => {
+const InputChat = ({
+  value,
+  onChangeText,
+  onButtonPress,
+  onUploadPress,
+  targetChat,
+}) => {
   return (
     <View style={styles.container}>
       <TextInput
@@ -11,6 +17,11 @@ const InputChat = ({value, onChangeText, onButtonPress, targetChat}) => {
         placeholder={`Tulis Pesan Untuk ${targetChat.data.fullName}`}
         value={value}
         onChangeText={onChangeText}
+      />
+      <Button
+        disable={value.length < 1}
+        type="btn-icon-photo"
+        onPress={() => onUploadPress && onUploadPress()}
       />
       <Button
         disable={value.length < 1}
@@ -24,7 +35,11 @@ const InputChat = ({value, onChangeText, onButtonPress, targetChat}) => {
 export default InputChat;
 
 const styles = StyleSheet.create({
-  container: {padding: 16, flexDirection: 'row', backgroundColor: colors.white},
+  container: {
+    padding: 16,
+    flexDirection: "row",
+    backgroundColor: colors.white,
+  },
   input: {
     backgroundColor: colors.disable,
     padding: 14,

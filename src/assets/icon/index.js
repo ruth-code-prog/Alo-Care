@@ -1,5 +1,6 @@
 import IconBackDark from './ic-back-dark.svg';
 import IconAddPhoto from './ic-add-photo.svg';
+import IconCamera from './ic-camera.svg';
 import IconRemovePhoto from './ic-remove-photo.svg';
 import IconOurstaff from './ic-ourstaff.svg';
 import IconOurstaffActive from './ic-ourstaff-active.svg';
@@ -22,6 +23,7 @@ import IconHelp from './ic-help.svg';
 export {
   IconBackDark,
   IconAddPhoto,
+  IconCamera,
   IconRemovePhoto,
   IconOurstaff,
   IconOurstaffActive,

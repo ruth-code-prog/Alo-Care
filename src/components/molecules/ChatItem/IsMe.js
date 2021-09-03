@@ -1,14 +1,45 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../../../utils';
+import React, { useState } from "react";
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import ImageViewer from "react-native-image-zoom-viewer";
+import { colors, fonts } from "../../../utils";
 
-const IsMe = ({text, date}) => {
+const IsMe = ({ text, date, type }) => {
+  const [modalZoom, setModalZoom] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.chatContent}>
-        <Text style={styles.text}>{text}</Text>
+        {type === "photo" ? (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setModalZoom(true)}
+          >
+            <Image
+              source={{ uri: text }}
+              style={{ width: 200, height: 240 }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        ) : (
+          <Text style={styles.text}>{text}</Text>
+        )}
       </View>
       <Text style={styles.date}>{date}</Text>
+      {type === "photo" ? (
+        <Modal visible={modalZoom} transparent={true}>
+          <ImageViewer
+            enableSwipeDown
+            onSwipeDown={() => setModalZoom(false)}
+            imageUrls={[{ url: text }]}
+          />
+        </Modal>
+      ) : null}
     </View>
   );
 };
@@ -16,12 +47,12 @@ const IsMe = ({text, date}) => {
 export default IsMe;
 
 const styles = StyleSheet.create({
-  container: {marginBottom: 20, alignItems: 'flex-end', paddingRight: 16},
+  container: { marginBottom: 20, alignItems: "flex-end", paddingRight: 16 },
   chatContent: {
     padding: 12,
     paddingRight: 18,
     backgroundColor: colors.cardLight,
-    maxWidth: '70%',
+    maxWidth: "70%",
     borderRadius: 10,
     borderBottomRightRadius: 0,
   },
