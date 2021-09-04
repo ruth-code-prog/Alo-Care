@@ -29,7 +29,7 @@ const Chatting = ({ navigation, route }) => {
         .on("value", (snapshot) => {
           if (snapshot.val()) {
             const dataSnapshot = snapshot.val();
-            // console.log(dataSnapshot);
+
             let realData = {};
             const allDataChat = [];
 
