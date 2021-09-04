@@ -55,13 +55,13 @@ const Register = ({navigation}) => {
             value={form.fullName}
             onChangeText={value => setForm('fullName', value)}
           />
-          <Gap height={24} />
+          <Gap height={16} />
           <Input
             label="Pekerjaan"
             value={form.profession}
             onChangeText={value => setForm('profession', value)}
           />
-          <Gap height={24} />
+          <Gap height={16} />
           <Input
             label="Nomor Handphone"
             value={form.phoneNumber}
@@ -69,19 +69,20 @@ const Register = ({navigation}) => {
             onChangeText={value => setForm('phoneNumber', value)}
             keyboardType='numeric'
           />
+          <Gap height={16} />
           <Input
             label="Email"
             value={form.email}
             onChangeText={value => setForm('email', value)}
           />
-          <Gap height={24} />
+          <Gap height={16} />
           <Input
             label="Password"
             value={form.password}
             onChangeText={value => setForm('password', value)}
             secureTextEntry
           />
-          <Gap height={40} />
+          <Gap height={30} />
           <Button title="Selanjutnya" onPress={onContinue} />
         </ScrollView>
       </View>
