@@ -29,9 +29,19 @@ const Chatting = ({ navigation, route }) => {
         .on("value", (snapshot) => {
           if (snapshot.val()) {
             const dataSnapshot = snapshot.val();
+            // console.log(dataSnapshot);
+            let realData = {};
             const allDataChat = [];
-            Object.keys(dataSnapshot).map((key) => {
-              const dataChat = dataSnapshot[key];
+
+            Object.entries(dataSnapshot)
+              .reverse()
+              .map((val) => {
+                realData[val[0]] = val[1];
+              });
+
+            Object.keys(realData).map((key) => {
+              const dataChat = realData[key];
+
               const newDataChat = [];
               let valueDataChat = Object.values(dataChat);
               valueDataChat = valueDataChat.sort((a, b) => {
@@ -47,6 +57,7 @@ const Chatting = ({ navigation, route }) => {
                 });
               });
               newDataChat.reverse();
+
               allDataChat.push({
                 id: key,
                 data: valueDataChat,
@@ -212,7 +223,7 @@ const Chatting = ({ navigation, route }) => {
             return (
               <View key={chat.id}>
                 <Text style={styles.chatDate}>{chat.id}</Text>
-                {chat.data.map((itemChat) => {
+                {chat?.data.map((itemChat) => {
                   const isMe = itemChat.sendBy === user.uid;
                   return (
                     <ChatItem
