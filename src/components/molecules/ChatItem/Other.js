@@ -1,29 +1,52 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 import { colors, fonts } from "../../../utils";
-import { DummyDoctor9 } from "../../../assets";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 const Other = ({ text, date, photo, type }) => {
+  const [modalZoom, setModalZoom] = useState(false);
   return (
     <View style={styles.container}>
       <Image source={photo} style={styles.avatar} />
       <View>
         <View style={styles.chatContent}>
           {type === "photo" ? (
-            <Image
-              source={{ uri: text }}
-              style={{
-                width: Dimensions.get("screen").width / 2.5,
-                height: 240,
-              }}
-              resizeMode="cover"
-            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => setModalZoom(true)}
+            >
+              <Image
+                source={{ uri: text }}
+                style={{
+                  width: Dimensions.get("screen").width / 3,
+                  height: 240,
+                }}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
           ) : (
             <Text style={styles.text}>{text}</Text>
           )}
         </View>
         <Text style={styles.date}>{date}</Text>
       </View>
+      {type === "photo" ? (
+        <Modal visible={modalZoom} transparent={true}>
+          <ImageViewer
+            enableSwipeDown
+            onSwipeDown={() => setModalZoom(false)}
+            imageUrls={[{ url: text }]}
+          />
+        </Modal>
+      ) : null}
     </View>
   );
 };
