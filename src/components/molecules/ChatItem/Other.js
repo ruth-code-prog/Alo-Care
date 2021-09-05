@@ -10,14 +10,24 @@ import {
 } from "react-native";
 import { colors, fonts } from "../../../utils";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { ILNullPhoto } from "../../../assets";
 
-const Other = ({ text, date, photo, type }) => {
+const Other = ({ text, date, photo, type, fullName }) => {
   const [modalZoom, setModalZoom] = useState(false);
   return (
     <View style={styles.container}>
-      <Image source={photo} style={styles.avatar} />
+      {photo ? (
+        <Image source={photo} style={styles.avatar} />
+      ) : (
+        <Image source={ILNullPhoto} style={styles.avatar} />
+      )}
       <View>
-        <View style={styles.chatContent}>
+        <View style={[styles.chatContent, { paddingTop: fullName ? 4 : 12 }]}>
+          {fullName ? (
+            <View style={styles.fullNameContainer}>
+              <Text style={styles.fullName}>{fullName}</Text>
+            </View>
+          ) : null}
           {type === "photo" ? (
             <TouchableOpacity
               activeOpacity={0.8}
@@ -62,12 +72,20 @@ const styles = StyleSheet.create({
   },
   avatar: { width: 30, height: 30, borderRadius: 30 / 2, marginRight: 12 },
   chatContent: {
-    padding: 12,
+    paddingBottom: 12,
+    paddingLeft: 12,
     paddingRight: 40,
     backgroundColor: colors.primary,
     maxWidth: "100%",
     borderRadius: 10,
     borderBottomLeftRadius: 0,
+  },
+  fullName: {
+    fontSize: 14,
+    fontFamily: fonts.primary[900],
+    fontWeight: "bold",
+    color: colors.tertiary,
+    marginBottom: 4,
   },
   text: {
     fontSize: 14,

@@ -138,6 +138,7 @@ const ChattingGroup = ({ navigation, route }) => {
       chatTime: getChatTime(today),
       chatContent: type === "photo" ? photo : chatContent,
       type: type ? type : null,
+      fullName: user?.fullName,
     };
 
     const urlFirebase = `chatting_group/${setDateChat(today)}`;
@@ -192,7 +193,8 @@ const ChattingGroup = ({ navigation, route }) => {
                   const isMe = itemChat.sendBy === user.uid;
                   return (
                     <ChatItem
-                      key={itemChat.id}
+                      fullName={itemChat?.fullName}
+                      key={itemChat?.fullName}
                       isMe={isMe}
                       text={itemChat.chatContent}
                       date={itemChat.chatTime}
