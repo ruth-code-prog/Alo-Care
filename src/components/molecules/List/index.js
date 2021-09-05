@@ -8,6 +8,7 @@ import {
   IconRate,
   IconHelp,
   IconCamera,
+  ILLogo,
 } from "../../../assets";
 import { Gap } from "../../atoms";
 
@@ -24,6 +25,9 @@ const List = ({ profile, name, desc, type, onPress, icon }) => {
     }
     if (icon === "help") {
       return <IconHelp />;
+    }
+    if (icon === "logo") {
+      return <ILLogo width={40} height={40} />;
     }
     return <IconEditProfile />;
   };

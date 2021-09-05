@@ -9,12 +9,17 @@ const InputChat = ({
   onButtonPress,
   onUploadPress,
   targetChat,
+  type,
 }) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder={`Tulis Pesan Untuk ${targetChat.data.fullName}`}
+        placeholder={`${
+          type === "group"
+            ? `Tulis Pesan...`
+            : `Tulis Pesan Untuk ${targetChat?.data?.fullName}`
+        }`}
         value={value}
         onChangeText={onChangeText}
       />

@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {List} from '../../components';
-import {Fire} from '../../config';
-import {colors, fonts, getData} from '../../utils';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { List } from "../../components";
+import { Fire } from "../../config";
+import { colors, fonts, getData } from "../../utils";
 
-const Messages = ({navigation}) => {
+const Messages = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
 
@@ -14,14 +14,16 @@ const Messages = ({navigation}) => {
     const urlHistory = `messages/${user.uid}/`;
     const messagesDB = rootDB.child(urlHistory);
 
-    messagesDB.on('value', async snapshot => {
+    messagesDB.on("value", async (snapshot) => {
       if (snapshot.val()) {
         const oldData = snapshot.val();
         const data = [];
 
-        const promises = await Object.keys(oldData).map(async key => {
+        const promises = await Object.keys(oldData).map(async (key) => {
           const urlUidOurstaff = `ourstaffs/${oldData[key].uidPartner}`;
-          const detailOurstaff = await rootDB.child(urlUidOurstaff).once('value');
+          const detailOurstaff = await rootDB
+            .child(urlUidOurstaff)
+            .once("value");
           data.push({
             id: key,
             detailOurstaff: detailOurstaff.val(),
@@ -37,7 +39,7 @@ const Messages = ({navigation}) => {
   }, [user.uid]);
 
   const getDataUserFromLocal = () => {
-    getData('user').then(res => {
+    getData("user").then((res) => {
       setUser(res);
     });
   };
@@ -45,7 +47,18 @@ const Messages = ({navigation}) => {
     <View style={styles.page}>
       <View style={styles.content}>
         <Text style={styles.title}>Pesan</Text>
-        {historyChat.map(chat => {
+        <Text style={styles.subtitle}>Komunitas Alocare</Text>
+        <View>
+          <List
+            icon="logo"
+            name={"Komunitas Alocare"}
+            desc={"Chat bersama Komunitas Alocare"}
+            onPress={() => navigation.navigate("ChattingGroup")}
+          />
+        </View>
+        <Text style={styles.subtitle}>Personal Chat</Text>
+
+        {historyChat.map((chat) => {
           const dataOurstaff = {
             id: chat.detailOurstaff.uid,
             data: chat.detailOurstaff,
@@ -53,11 +66,11 @@ const Messages = ({navigation}) => {
           return (
             <List
               key={chat.id}
-              profile={{uri: chat.detailOurstaff.photo}}
+              profile={{ uri: chat.detailOurstaff.photo }}
               name={chat.detailOurstaff.fullName}
               desc={chat.lastContentChat}
               type={chat?.type}
-              onPress={() => navigation.navigate('Chatting', dataOurstaff)}
+              onPress={() => navigation.navigate("Chatting", dataOurstaff)}
             />
           );
         })}
@@ -69,7 +82,7 @@ const Messages = ({navigation}) => {
 export default Messages;
 
 const styles = StyleSheet.create({
-  page: {backgroundColor: colors.secondary, flex: 1},
+  page: { backgroundColor: colors.secondary, flex: 1 },
   content: {
     backgroundColor: colors.white,
     flex: 1,
@@ -78,6 +91,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    fontFamily: fonts.primary[600],
+    color: colors.text.primary,
+    marginTop: 30,
+    marginLeft: 16,
+  },
+  subtitle: {
+    fontSize: 14,
     fontFamily: fonts.primary[600],
     color: colors.text.primary,
     marginTop: 30,
