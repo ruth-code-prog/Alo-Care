@@ -16,7 +16,7 @@ const Other = ({ text, date, photo, type, fullName }) => {
   const [modalZoom, setModalZoom] = useState(false);
   return (
     <View style={styles.container}>
-      {photo ? (
+      {photo?.uri ? (
         <Image source={photo} style={styles.avatar} />
       ) : (
         <Image source={ILNullPhoto} style={styles.avatar} />

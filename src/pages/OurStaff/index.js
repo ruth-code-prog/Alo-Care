@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect, useState, useRef, memo } from "react";
 import {
   ActivityIndicator,
@@ -35,16 +36,6 @@ const OurStaff = ({ navigation }) => {
   const [web, setWeb] = useState([]);
   const [categoryOurstaff, setCategoryOurstaff] = useState([]);
   const [ourstaffs, setOurstaffs] = useState([]);
-  const [userPoint, setUserPoint] = useState(null);
-  const [userTenor1, setUserTenor1] = useState(null);
-  const [userTagihan1, setUserTagihan1] = useState(null);
-  const [userTempo1, setUserTempo1] = useState(null);
-  const [userTenor2, setUserTenor2] = useState(null);
-  const [userTagihan2, setUserTagihan2] = useState(null);
-  const [userTempo2, setUserTempo2] = useState(null);
-  const [userTenor3, setUserTenor3] = useState(null);
-  const [userTagihan3, setUserTagihan3] = useState(null);
-  const [userTempo3, setUserTempo3] = useState(null);
   const [products, setProducts] = useState([]);
   const [productsAll, setProductsAll] = useState([]);
   const [products2, setProducts2] = useState([]);
@@ -54,11 +45,10 @@ const OurStaff = ({ navigation }) => {
   const [searchProductLoading, setSearchProductLoading] = useState(false);
   const [searchProduct2Loading, setSearchProduct2Loading] = useState(false);
   const [searchProduct3Loading, setSearchProduct3Loading] = useState(false);
+  const [userHomeData, setUserHomeData] = useState({});
 
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
-
-  const runningTextRef = useRef(null);
 
   const { token } = useSelector((state) => state.fcm);
   const [profile, setProfile] = useState({
@@ -66,17 +56,7 @@ const OurStaff = ({ navigation }) => {
     fullName: "",
     profession: "",
   });
-  const shadowOpt = {
-    width: 160,
-    height: 170,
-    color: "#000",
-    border: 2,
-    radius: 3,
-    opacity: 0.2,
-    x: 0,
-    y: 3,
-    style: { marginVertical: 5 },
-  };
+
   useEffect(() => {
     getCategoryOurstaff();
     getTopRatedOurstaffs();
@@ -91,22 +71,34 @@ const OurStaff = ({ navigation }) => {
   useEffect(() => {
     Fire.auth().onAuthStateChanged(async (data) => {
       if (data) {
-        getUserPoint(data.uid);
-        getUserTenor1(data.uid);
-        getUserTagihan1(data.uid);
-        getUserTempo1(data.uid);
-        getUserTenor2(data.uid);
-        getUserTagihan2(data.uid);
-        getUserTempo2(data.uid);
-        getUserTenor3(data.uid);
-        getUserTagihan3(data.uid);
-        getUserTempo3(data.uid);
+        getUserHomeData(data.uid);
       }
     });
     getBanners();
     getProducts();
     getRunningText();
+    getUserList();
   }, []);
+
+  const getUserList = () => {
+    Fire.database()
+      .ref("users/")
+      .once("value")
+      .then(async(res) => {
+        if (res.val()) {
+          const data = res.val();
+          const realData = [];
+          Object.entries(data).map((val) => {
+            realData.push({ data: val[1] });
+          });
+          const filterData = realData?.filter((val) => val?.data?.uid);
+          storeData("userList", filterData);
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
 
   const getTopRatedOurstaffs = () => {
     Fire.database()
@@ -218,102 +210,12 @@ const OurStaff = ({ navigation }) => {
     setTokenToFirebase();
   }, []);
 
-  const getUserPoint = (uid) => {
+  const getUserHomeData = (uid) => {
     Fire.database()
       .ref("users/" + uid)
       .on("value", (snapshot) => {
         if (snapshot.val()) {
-          setUserPoint(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTenor1 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTenor1(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTagihan1 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTagihan1(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTempo1 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTempo1(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTenor2 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTenor2(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTagihan2 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTagihan2(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTempo2 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTempo2(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTenor3 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTenor3(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTagihan3 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTagihan3(snapshot.val());
-        }
-      });
-  };
-
-  const getUserTempo3 = (uid) => {
-    Fire.database()
-      .ref("users/" + uid)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          setUserTempo3(snapshot.val());
+          setUserHomeData(snapshot.val());
         }
       });
   };
@@ -505,7 +407,9 @@ const OurStaff = ({ navigation }) => {
               </TouchableOpacity>
 
               <Text style={styles.point}>
-                {CurrencyFormatter(userPoint !== null ? userPoint.point : 0)}
+                {CurrencyFormatter(
+                  userHomeData !== null ? userHomeData.point : 0
+                )}
               </Text>
             </MemoView>
 
@@ -586,48 +490,48 @@ const OurStaff = ({ navigation }) => {
           <MemoView style={styles.tagihan1}>
             <View style={styles.wrapper1}>
               <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userTenor1 !== null ? userTenor1.tenor1 : 0}
+                Tenor : {userHomeData !== null ? userHomeData.tenor1 : 0}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
                 Tagihan :{" "}
                 {CurrencyFormatter(
-                  userTagihan1 !== null ? userTagihan1.tagihan1 : 0
+                  userHomeData !== null ? userHomeData.tagihan1 : 0
                 )}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userTempo1 !== null ? userTempo1.tempo1 : 0}
+                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo1 : 0}
               </Text>
             </View>
 
             <View style={styles.garis} />
             <View style={styles.wrapper1}>
               <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userTenor2 !== null ? userTenor2.tenor2 : 0}
+                Tenor : {userHomeData !== null ? userHomeData.tenor2 : 0}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
                 Tagihan :{" "}
                 {CurrencyFormatter(
-                  userTagihan2 !== null ? userTagihan2.tagihan2 : 0
+                  userHomeData !== null ? userHomeData.tagihan2 : 0
                 )}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userTempo2 !== null ? userTempo2.tempo2 : 0}
+                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo2 : 0}
               </Text>
             </View>
 
             <View style={styles.garis} />
             <View style={styles.wrapper1}>
               <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userTenor3 !== null ? userTenor3.tenor3 : 0}
+                Tenor : {userHomeData !== null ? userHomeData.tenor3 : 0}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
                 Tagihan :{" "}
                 {CurrencyFormatter(
-                  userTagihan3 !== null ? userTagihan3.tagihan3 : 0
+                  userHomeData !== null ? userHomeData.tagihan3 : 0
                 )}
               </Text>
               <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userTempo3 !== null ? userTempo3.tempo3 : 0}
+                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo3 : 0}
               </Text>
             </View>
             <View style={styles.garis} />
