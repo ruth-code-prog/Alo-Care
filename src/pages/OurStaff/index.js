@@ -78,10 +78,10 @@ const OurStaff = ({ navigation }) => {
     style: { marginVertical: 5 },
   };
   useEffect(() => {
-    // getCategoryOurstaff();
-    // getTopRatedOurstaffs();
-    // getNews();
-    // getWeb();
+    getCategoryOurstaff();
+    getTopRatedOurstaffs();
+    getNews();
+    getWeb();
 
     navigation.addListener("focus", () => {
       getUserData();
@@ -89,23 +89,23 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    // Fire.auth().onAuthStateChanged(async (data) => {
-    //   if (data) {
-    //     getUserPoint(data.uid);
-    //     getUserTenor1(data.uid);
-    //     getUserTagihan1(data.uid);
-    //     getUserTempo1(data.uid);
-    //     getUserTenor2(data.uid);
-    //     getUserTagihan2(data.uid);
-    //     getUserTempo2(data.uid);
-    //     getUserTenor3(data.uid);
-    //     getUserTagihan3(data.uid);
-    //     getUserTempo3(data.uid);
-    //   }
-    // });
-    // getBanners();
-    // getProducts();
-    // getRunningText();
+    Fire.auth().onAuthStateChanged(async (data) => {
+      if (data) {
+        getUserPoint(data.uid);
+        getUserTenor1(data.uid);
+        getUserTagihan1(data.uid);
+        getUserTempo1(data.uid);
+        getUserTenor2(data.uid);
+        getUserTagihan2(data.uid);
+        getUserTempo2(data.uid);
+        getUserTenor3(data.uid);
+        getUserTagihan3(data.uid);
+        getUserTempo3(data.uid);
+      }
+    });
+    getBanners();
+    getProducts();
+    getRunningText();
   }, []);
 
   const getTopRatedOurstaffs = () => {
