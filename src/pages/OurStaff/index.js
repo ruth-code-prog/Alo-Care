@@ -59,15 +59,15 @@ const OurStaff = ({ navigation }) => {
   });
 
   useEffect(() => {
-      getCategoryOurstaff();
+    getCategoryOurstaff();
     getTopRatedOurstaffs();
     console.log("aa", ourstaffs[0]);
-      getNews();
-      getWeb();
+    getNews();
+    getWeb();
 
-      navigation.addListener("focus", () => {
-        getUserData();
-      });
+    navigation.addListener("focus", () => {
+      getUserData();
+    });
   }, [navigation]);
 
   useEffect(() => {
@@ -407,9 +407,13 @@ const OurStaff = ({ navigation }) => {
                 <View style={styles.verticalSeparator} />
                 <View style={styles.rightContainer}>
                   <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL("https://wa.me/+62895600394345")
-                    }
+                    onPress={() => {
+                      // Linking.openURL("https://wa.me/+62895600394345")
+                      navigation.navigate("Chatting", {
+                        data: ourstaffs[0]?.data,
+                        chatContent: `Saya ingin bertanya mengenai wallet`,
+                      });
+                    }}
                   >
                     <Image
                       source={require("../../assets/dummy/dompet.png")}
