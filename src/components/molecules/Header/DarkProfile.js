@@ -1,10 +1,10 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import {colors, fonts} from '../../../utils';
-import {Button} from '../../atoms';
-import {DummyDoctor9} from '../../../assets';
+import React from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { colors, fonts } from "../../../utils";
+import { Button } from "../../atoms";
+import { DummyDoctor9 } from "../../../assets";
 
-const DarkProfile = ({onPress, title, desc, photo}) => {
+const DarkProfile = ({ onPress, title, desc, photo }) => {
   return (
     <View style={styles.container}>
       <Button type="icon-only" icon="back-light" onPress={onPress} />
@@ -12,7 +12,7 @@ const DarkProfile = ({onPress, title, desc, photo}) => {
         <Text style={styles.name}>{title}</Text>
         <Text style={styles.desc}>{desc}</Text>
       </View>
-      <Image source={photo} style={styles.avatar} />
+      {photo ? <Image source={photo} style={styles.avatar} /> : null}
     </View>
   );
 };
@@ -27,22 +27,22 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
-  contet: {flex: 1},
-  avatar: {width: 46, height: 46, borderRadius: 46 / 2},
+  contet: { flex: 1 },
+  avatar: { width: 46, height: 46, borderRadius: 46 / 2 },
   name: {
     fontSize: 20,
     fontFamily: fonts.primary[600],
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
   },
   desc: {
     fontSize: 14,
     fontFamily: fonts.primary.normal,
     marginTop: 6,
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.text.subTitle,
   },
 });

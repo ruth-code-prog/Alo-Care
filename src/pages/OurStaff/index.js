@@ -15,13 +15,14 @@ import {
 import CurrencyFormatter from "react-native-currency-formatter";
 import TextTicker from "react-native-text-ticker";
 import { useSelector } from "react-redux";
-import { ILNullPhoto } from "../../assets";
+import { IconFavoriteActive, ILNullPhoto } from "../../assets";
 import {
   BannerSlider,
   Gap,
   HomeProfile,
   NewsItem,
   OurStaffCategory,
+  ProductCard,
   RatedOurStaff,
   WebItem,
 } from "../../components";
@@ -58,14 +59,15 @@ const OurStaff = ({ navigation }) => {
   });
 
   useEffect(() => {
-    getCategoryOurstaff();
+      getCategoryOurstaff();
     getTopRatedOurstaffs();
-    getNews();
-    getWeb();
+    console.log("aa", ourstaffs[0]);
+      getNews();
+      getWeb();
 
-    navigation.addListener("focus", () => {
-      getUserData();
-    });
+      navigation.addListener("focus", () => {
+        getUserData();
+      });
   }, [navigation]);
 
   useEffect(() => {
@@ -84,7 +86,7 @@ const OurStaff = ({ navigation }) => {
     Fire.database()
       .ref("users/")
       .once("value")
-      .then(async(res) => {
+      .then(async (res) => {
         if (res.val()) {
           const data = res.val();
           const realData = [];
@@ -227,36 +229,25 @@ const OurStaff = ({ navigation }) => {
 
     await Fire.database()
       .ref("produk")
-      .once("value")
-      .then((res) => {
+      .on("value", (res) => {
         const arr = [...res.val()];
         setProducts(arr.filter((val) => val !== null));
         setProductsAll(arr.filter((val) => val !== null));
-      })
-      .catch((err) => {
-        console.error(err);
       });
     await Fire.database()
       .ref("produk2")
-      .once("value")
-      .then((res) => {
+      .on("value", (res) => {
         const arr = [...res.val()];
         setProducts2(arr.filter((val) => val !== null));
         setProducts2All(arr.filter((val) => val !== null));
-      })
-      .catch((err) => {
-        console.error(err);
       });
+
     await Fire.database()
       .ref("produk3")
-      .once("value")
-      .then((res) => {
+      .on("value", (res) => {
         const arr = [...res.val()];
         setProducts3(arr.filter((val) => val !== null));
         setProducts3All(arr.filter((val) => val !== null));
-      })
-      .catch((err) => {
-        console.error(err);
       });
 
     setSearchProductLoading(false);
@@ -384,6 +375,13 @@ const OurStaff = ({ navigation }) => {
     }
   };
 
+  const handleBuy = (item) => {
+    navigation.navigate("Chatting", {
+      data: ourstaffs[0]?.data,
+      chatContent: `Saya ingin membeli produk ${item?.title}`,
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -396,21 +394,37 @@ const OurStaff = ({ navigation }) => {
                 onPress={() => navigation.navigate("UserProfile", profile)}
               />
 
-              <TouchableOpacity
-                onPress={() => Linking.openURL("https://wa.me/+62895600394345")}
-              >
-                <Image
-                  source={require("../../assets/dummy/dompet.png")}
-                  style={{ width: 45, height: 42, marginLeft: 150 }}
-                  resizeMode={"contain"}
-                />
-              </TouchableOpacity>
+              <View style={styles.rowCenter}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Wishlist", {
+                      adminData: ourstaffs[0]?.data,
+                    })
+                  }
+                >
+                  <IconFavoriteActive height={32} width={32} />
+                </TouchableOpacity>
+                <View style={styles.verticalSeparator} />
+                <View style={styles.rightContainer}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      Linking.openURL("https://wa.me/+62895600394345")
+                    }
+                  >
+                    <Image
+                      source={require("../../assets/dummy/dompet.png")}
+                      style={{ width: 45, height: 42 }}
+                      resizeMode={"contain"}
+                    />
+                  </TouchableOpacity>
 
-              <Text style={styles.point}>
-                {CurrencyFormatter(
-                  userHomeData !== null ? userHomeData.point : 0
-                )}
-              </Text>
+                  <Text style={styles.point}>
+                    {CurrencyFormatter(
+                      userHomeData !== null ? userHomeData.point : 0
+                    )}
+                  </Text>
+                </View>
+              </View>
             </MemoView>
 
             {banners?.length > 0 ? <BannerSlider data={banners} /> : null}
@@ -582,68 +596,12 @@ const OurStaff = ({ navigation }) => {
               />
             ) : (
               products?.map((item, index) => (
-                <View
+                <ProductCard
+                  onPress={() => handleBuy(item)}
+                  type="produk"
                   key={index}
-                  style={[
-                    {
-                      width: 300,
-                      borderRadius: 10,
-                      marginRight: 10,
-                      marginBottom: 24,
-                    },
-                    styles.shadow,
-                  ]}
-                >
-                  <Image
-                    source={{
-                      uri: item?.image || "",
-                    }}
-                    style={{
-                      width: 300,
-                      height: 200,
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 20,
-                      backgroundColor: "white",
-                      borderBottomRightRadius: 10,
-                      borderBottomLeftRadius: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.lokasi}
-                    </Text>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "#2d3436",
-                        marginTop: 8,
-                      }}
-                    >
-                      {item?.title}
-                    </Text>
-                    <Text
-                      numberOfLines={3}
-                      ellipsizeMode={"tail"}
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.desc}
-                    </Text>
-                  </View>
-                </View>
+                  item={item}
+                />
               ))
             )}
           </ScrollView>
@@ -679,68 +637,12 @@ const OurStaff = ({ navigation }) => {
               />
             ) : (
               products2?.map((item, index) => (
-                <View
+                <ProductCard
+                  onPress={() => handleBuy(item)}
+                  type="produk2"
                   key={index}
-                  style={[
-                    {
-                      width: 300,
-                      borderRadius: 10,
-                      marginRight: 10,
-                      marginBottom: 24,
-                    },
-                    styles.shadow,
-                  ]}
-                >
-                  <Image
-                    source={{
-                      uri: item?.image || "",
-                    }}
-                    style={{
-                      width: 300,
-                      height: 200,
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 20,
-                      backgroundColor: "white",
-                      borderBottomRightRadius: 10,
-                      borderBottomLeftRadius: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.lokasi}
-                    </Text>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "#2d3436",
-                        marginTop: 8,
-                      }}
-                    >
-                      {item?.title}
-                    </Text>
-                    <Text
-                      numberOfLines={3}
-                      ellipsizeMode={"tail"}
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.desc}
-                    </Text>
-                  </View>
-                </View>
+                  item={item}
+                />
               ))
             )}
           </ScrollView>
@@ -776,68 +678,12 @@ const OurStaff = ({ navigation }) => {
               />
             ) : (
               products3?.map((item, index) => (
-                <View
+                <ProductCard
+                  onPress={() => handleBuy(item)}
+                  type="produk3"
                   key={index}
-                  style={[
-                    {
-                      width: 300,
-                      borderRadius: 10,
-                      marginRight: 10,
-                      marginBottom: 24,
-                    },
-                    styles.shadow,
-                  ]}
-                >
-                  <Image
-                    source={{
-                      uri: item?.image || "",
-                    }}
-                    style={{
-                      width: 300,
-                      height: 200,
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 20,
-                      backgroundColor: "white",
-                      borderBottomRightRadius: 10,
-                      borderBottomLeftRadius: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.lokasi}
-                    </Text>
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        color: "#2d3436",
-                        marginTop: 8,
-                      }}
-                    >
-                      {item?.title}
-                    </Text>
-                    <Text
-                      numberOfLines={3}
-                      ellipsizeMode={"tail"}
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "300",
-                        color: "#636e72",
-                      }}
-                    >
-                      {item?.desc}
-                    </Text>
-                  </View>
-                </View>
+                  item={item}
+                />
               ))
             )}
           </ScrollView>
@@ -889,12 +735,7 @@ const styles = StyleSheet.create({
   point: {
     fontSize: 14,
     color: "#E5B654",
-    textAlign: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    position: "absolute",
-    paddingTop: 12,
-    marginLeft: 180,
+    marginTop: 12,
   },
   content: {
     backgroundColor: colors.white,
@@ -958,5 +799,20 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingTop: 4,
     paddingHorizontal: 16,
+  },
+  rightContainer: {
+    alignItems: "center",
+  },
+  rowCenter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flex: 0.8,
+  },
+  verticalSeparator: {
+    height: 40,
+    width: 2,
+    marginHorizontal: 8,
+    backgroundColor: colors.border,
   },
 });

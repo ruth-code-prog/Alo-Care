@@ -15,7 +15,9 @@ import {
 const Chatting = ({ navigation, route }) => {
   const dataOurstaff = route?.params || {};
   const scrollRef = useRef(null);
-  const [chatContent, setChatContent] = useState("");
+  const [chatContent, setChatContent] = useState(
+    dataOurstaff?.chatContent || ""
+  );
   const [user, setUser] = useState({});
   const [chatData, setChatData] = useState([]);
   const [photo, setPhoto] = useState(null);

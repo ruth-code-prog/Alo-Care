@@ -17,7 +17,7 @@ const HomeProfile = ({onPress, profile}) => {
 export default HomeProfile;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'row'},
+  container: {flexDirection: 'row', flex: 1},
   avatar: {width: 46, height: 46, borderRadius: 46 / 2, marginRight: 12},
   name: {
     fontSize: 16,

@@ -17,6 +17,7 @@ import {
   Detail,
   ForgotPass,
   ChattingGroup,
+  Wishlist,
 } from "../pages";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigator } from "../components";
@@ -105,6 +106,11 @@ export default function Router() {
       <Stack.Screen
         name="ForgotPass"
         component={ForgotPass}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Wishlist"
+        component={Wishlist}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
