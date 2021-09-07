@@ -25,6 +25,8 @@ import {
   OurStaffCategory,
   ProductCard,
   RatedOurStaff,
+  TenorCard,
+  VideoPlayer,
   WebItem,
 } from "../../components";
 import { Fire } from "../../config";
@@ -67,12 +69,16 @@ const OurStaff = ({ navigation }) => {
     fullName: "",
     profession: "",
   });
+  const [videoLink, setVideoLink] = useState("");
+  const [videoModal, setVideoModal] = useState(false);
 
   const [userWishlist, setUserWishlist] = useFormSoul({
     product1: [],
     product2: [],
     product3: [],
   });
+
+  const pagesScrollRef = useRef(null);
 
   useEffect(() => {
     getCategoryOurstaff();
@@ -134,7 +140,7 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, [userWishlist]);
 
   const getWishlist = (uid) => {
@@ -347,7 +353,10 @@ const OurStaff = ({ navigation }) => {
         if (item) {
           return (
             <MemoTouchableOpacity
-              onPress={() => openNews(item.link)}
+              onPress={() => {
+                setVideoLink(item?.link);
+                setVideoModal(true);
+              }}
               key={item.id}
             >
               <NewsItem
@@ -460,7 +469,21 @@ const OurStaff = ({ navigation }) => {
   return (
     <View style={styles.page}>
       <View style={styles.content}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              pagesScrollRef?.current?.scrollTo({
+                y: 0,
+                x: 0,
+                animated: true,
+              });
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.headerTitle}>ALO CARE</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView ref={pagesScrollRef} showsVerticalScrollIndicator={false}>
           <MemoView style={styles.wrapperSection}>
             <Gap height={30} />
             <MemoView style={styles.row}>
@@ -583,56 +606,37 @@ const OurStaff = ({ navigation }) => {
           <Text style={styles.pm}>Pembiayaan Multiguna</Text>
           <View style={styles.garis} />
           <MemoView style={styles.tagihan1}>
-            <View style={styles.wrapper1}>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userHomeData !== null ? userHomeData.tenor1 : 0}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tagihan :{" "}
-                {CurrencyFormatter(
-                  userHomeData !== null ? userHomeData.tagihan1 : 0
-                )}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo1 : 0}
-              </Text>
-            </View>
-
-            <View style={styles.garis} />
-            <View style={styles.wrapper1}>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userHomeData !== null ? userHomeData.tenor2 : 0}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tagihan :{" "}
-                {CurrencyFormatter(
-                  userHomeData !== null ? userHomeData.tagihan2 : 0
-                )}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo2 : 0}
-              </Text>
-            </View>
-
-            <View style={styles.garis} />
-            <View style={styles.wrapper1}>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tenor : {userHomeData !== null ? userHomeData.tenor3 : 0}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Tagihan :{" "}
-                {CurrencyFormatter(
-                  userHomeData !== null ? userHomeData.tagihan3 : 0
-                )}
-              </Text>
-              <Text selectable={true} style={styles.titleTagihan}>
-                Jatuh Tempo : {userHomeData !== null ? userHomeData.tempo3 : 0}
-              </Text>
-            </View>
-            <View style={styles.garis} />
+            <ScrollView
+              contentContainerStyle={{ padding: 20 }}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              <TenorCard
+                tenor={userHomeData?.tenor1 || 0}
+                tagihan={CurrencyFormatter(userHomeData?.tagihan1 || 0)}
+                jatuhTempo={userHomeData?.tempo1 || 0}
+              />
+              <View style={{ marginRight: 16 }} />
+              <TenorCard
+                tenor={userHomeData?.tenor2 || 0}
+                tagihan={CurrencyFormatter(userHomeData?.tagihan2 || 0)}
+                jatuhTempo={userHomeData?.tempo2 || 0}
+              />
+              <View style={{ marginRight: 16 }} />
+              <TenorCard
+                tenor={userHomeData?.tenor3 || 0}
+                tagihan={CurrencyFormatter(userHomeData?.tagihan3 || 0)}
+                jatuhTempo={userHomeData?.tempo3 || 0}
+              />
+            </ScrollView>
           </MemoView>
           <MemoTouchableOpacity
-            onPress={() => Linking.openURL("https://wa.me/+62895600394345")}
+            onPress={() => {
+              navigation.navigate("Chatting", {
+                data: ourstaffs[0]?.data,
+                chatContent: `Saya ingin bertanya mengenai peminjaman`,
+              });
+            }}
           >
             <Image
               source={require("../../assets/dummy/pinjam.png")}
@@ -640,9 +644,6 @@ const OurStaff = ({ navigation }) => {
               resizeMode={"contain"}
             />
             <Text style={{ marginLeft: 16 }}>Pinjam</Text>
-            <Text style={{ marginLeft: 16 }}>
-              Klik (sentuh di sini) lanjut ke whatsapp
-            </Text>
           </MemoTouchableOpacity>
 
           <View>
@@ -782,6 +783,11 @@ const OurStaff = ({ navigation }) => {
           </ScrollView>
         </ScrollView>
       </View>
+      <VideoPlayer
+        link={videoLink}
+        visible={videoModal}
+        onClose={() => setVideoModal(false)}
+      />
     </View>
   );
 };
@@ -907,5 +913,18 @@ const styles = StyleSheet.create({
     width: 2,
     marginHorizontal: 8,
     backgroundColor: colors.border,
+  },
+  headerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 60,
+    backgroundColor: colors.secondary,
+  },
+  headerTitle: {
+    fontSize: 24,
+    color: colors.primary,
+    fontFamily: fonts.primary[900],
+    fontWeight: "bold",
+    letterSpacing: 2,
   },
 });
