@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import React, { useEffect, useState, useRef, memo } from "react";
+import { useFocusEffect } from "@react-navigation/core";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -27,7 +28,16 @@ import {
   WebItem,
 } from "../../components";
 import { Fire } from "../../config";
-import { colors, fonts, getData, showError, storeData } from "../../utils";
+import {
+  colors,
+  filterWishlistProduct,
+  fonts,
+  getData,
+  showError,
+  storeData,
+  useForm,
+  useFormSoul,
+} from "../../utils";
 
 const MemoView = memo(View);
 const MemoTouchableOpacity = memo(TouchableOpacity);
@@ -58,10 +68,16 @@ const OurStaff = ({ navigation }) => {
     profession: "",
   });
 
+  const [userWishlist, setUserWishlist] = useFormSoul({
+    product1: [],
+    product2: [],
+    product3: [],
+  });
+
   useEffect(() => {
     getCategoryOurstaff();
     getTopRatedOurstaffs();
-    console.log("aa", ourstaffs[0]);
+
     getNews();
     getWeb();
 
@@ -71,16 +87,89 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    Fire.auth().onAuthStateChanged(async (data) => {
-      if (data) {
-        getUserHomeData(data.uid);
-      }
-    });
     getBanners();
-    getProducts();
     getRunningText();
     getUserList();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      Fire.auth().onAuthStateChanged(async (data) => {
+        if (data) {
+          getUserHomeData(data.uid);
+          getWishlist(data?.uid);
+        }
+      });
+    }, [])
+  );
+
+  useEffect(() => {
+    const setTokenToFirebase = async () => {
+      let userdata = await getData("user");
+      if (userdata) {
+        const data = {
+          fullName: userdata.fullName,
+          profession: userdata.profession,
+          email: userdata.email,
+          uid: userdata.uid,
+          token: token,
+          photo: userdata.photo,
+          photoForDB: userdata.photoForDB,
+          point: userdata.point,
+          tenor1: userdata.tenor1,
+          tagihan1: userdata.tagihan1,
+          tempo1: userdata.tempo1,
+          tenor2: userdata.tenor2,
+          tagihan2: userdata.tagihan2,
+          tempo2: userdata.tempo2,
+          tenor3: userdata.tenor3,
+          tagihan3: userdata.tagihan3,
+          tempo3: userdata.tempo3,
+        };
+        Fire.database().ref(`users/${userdata.uid}/`).update({ token: token });
+        storeData("user", data);
+      }
+    };
+    setTokenToFirebase();
+  }, []);
+
+  useEffect(() => {
+    getProducts();
+  }, [userWishlist]);
+
+  const getWishlist = (uid) => {
+    Fire.database()
+      .ref(`users/${uid}/wishlist`)
+      .once("value")
+      .then((res) => {
+        const snapshotRes = res.val();
+        console.log("shiwiww,", snapshotRes);
+        const arr1 = [];
+        const arr2 = [];
+        const arr3 = [];
+
+        if (snapshotRes) {
+          Object.entries(snapshotRes).map((val) => {
+            if (val[0] === "produk") {
+              filterWishlistProduct(val, arr1);
+            } else if (val[0] === "produk2") {
+              filterWishlistProduct(val, arr2);
+            } else if (val[0] === "produk3") {
+              filterWishlistProduct(val, arr3);
+            }
+          });
+        }
+
+        setUserWishlist({
+          product1: arr1,
+          product2: arr2,
+          product3: arr3,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const getUserList = () => {
     Fire.database()
@@ -182,36 +271,6 @@ const OurStaff = ({ navigation }) => {
     });
   };
 
-  useEffect(() => {
-    const setTokenToFirebase = async () => {
-      let userdata = await getData("user");
-      if (userdata) {
-        const data = {
-          fullName: userdata.fullName,
-          profession: userdata.profession,
-          email: userdata.email,
-          uid: userdata.uid,
-          token: token,
-          photo: userdata.photo,
-          photoForDB: userdata.photoForDB,
-          point: userdata.point,
-          tenor1: userdata.tenor1,
-          tagihan1: userdata.tagihan1,
-          tempo1: userdata.tempo1,
-          tenor2: userdata.tenor2,
-          tagihan2: userdata.tagihan2,
-          tempo2: userdata.tempo2,
-          tenor3: userdata.tenor3,
-          tagihan3: userdata.tagihan3,
-          tempo3: userdata.tempo3,
-        };
-        Fire.database().ref(`users/${userdata.uid}/`).update({ token: token });
-        storeData("user", data);
-      }
-    };
-    setTokenToFirebase();
-  }, []);
-
   const getUserHomeData = (uid) => {
     Fire.database()
       .ref("users/" + uid)
@@ -249,7 +308,6 @@ const OurStaff = ({ navigation }) => {
         setProducts3(arr.filter((val) => val !== null));
         setProducts3All(arr.filter((val) => val !== null));
       });
-
     setSearchProductLoading(false);
     setSearchProduct2Loading(false);
     setSearchProduct3Loading(false);
@@ -382,6 +440,23 @@ const OurStaff = ({ navigation }) => {
     });
   };
 
+  const handleRemoveFavorite = (item, type) => {
+    let arr = [...userWishlist[type]];
+    arr = arr?.filter((val) => JSON.stringify(val) !== JSON.stringify(item));
+
+    setUserWishlist({
+      [type]: arr,
+    });
+  };
+
+  const handleAddFavorite = (item, type) => {
+    let arr = [...userWishlist[type]];
+    arr?.push(item);
+    setUserWishlist({
+      [type]: arr,
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -399,6 +474,8 @@ const OurStaff = ({ navigation }) => {
                   onPress={() =>
                     navigation.navigate("Wishlist", {
                       adminData: ourstaffs[0]?.data,
+                      wishlist: userWishlist,
+                      uid: userHomeData?.uid,
                     })
                   }
                 >
@@ -601,6 +678,10 @@ const OurStaff = ({ navigation }) => {
             ) : (
               products?.map((item, index) => (
                 <ProductCard
+                  onRemove={() => handleRemoveFavorite(item, "product1")}
+                  onAdd={() => handleAddFavorite(item, "product1")}
+                  product={userWishlist?.product1}
+                  uid={userHomeData?.uid}
                   onPress={() => handleBuy(item)}
                   type="produk"
                   key={index}
@@ -642,6 +723,10 @@ const OurStaff = ({ navigation }) => {
             ) : (
               products2?.map((item, index) => (
                 <ProductCard
+                  onRemove={() => handleRemoveFavorite(item, "product2")}
+                  onAdd={() => handleAddFavorite(item, "product2")}
+                  product={userWishlist?.product2}
+                  uid={userHomeData?.uid}
                   onPress={() => handleBuy(item)}
                   type="produk2"
                   key={index}
@@ -683,6 +768,10 @@ const OurStaff = ({ navigation }) => {
             ) : (
               products3?.map((item, index) => (
                 <ProductCard
+                  onRemove={() => handleRemoveFavorite(item, "product3")}
+                  onAdd={() => handleAddFavorite(item, "product3")}
+                  product={userWishlist?.product3}
+                  uid={userHomeData?.uid}
                   onPress={() => handleBuy(item)}
                   type="produk3"
                   key={index}

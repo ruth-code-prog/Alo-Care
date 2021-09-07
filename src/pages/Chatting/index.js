@@ -201,9 +201,9 @@ const Chatting = ({ navigation, route }) => {
     <View style={styles.page}>
       <Header
         type="dark-profile"
-        title={dataOurstaff.data.fullName}
-        desc={dataOurstaff.data.category}
-        photo={{ uri: dataOurstaff.data.photo }}
+        title={dataOurstaff?.data?.fullName}
+        desc={dataOurstaff?.data?.category}
+        photo={{ uri: dataOurstaff?.data?.photo }}
         onPress={() => navigation.goBack()}
       />
       <View style={styles.content}>

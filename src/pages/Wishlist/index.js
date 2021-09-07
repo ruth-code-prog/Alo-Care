@@ -1,13 +1,12 @@
-import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/core";
 import { ProductCard } from "../../components";
 import DarkProfile from "../../components/molecules/Header/DarkProfile";
-import { Fire } from "../../config";
 import { colors } from "../../utils";
 
 const Wishlist = ({ route }) => {
-  const { adminData } = route?.params || {};
+  const { adminData, wishlist, uid } = route?.params || {};
   const [product1, setProduct1] = useState([]);
   const [product2, setProduct2] = useState([]);
   const [product3, setProduct3] = useState([]);
@@ -15,52 +14,10 @@ const Wishlist = ({ route }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getWishlist();
+    setProduct1(wishlist?.product1);
+    setProduct2(wishlist?.product2);
+    setProduct3(wishlist?.product3);
   }, []);
-
-  const filterWishlistProduct = (val, arr) => {
-    if (val[1]?.length) {
-      val[1]?.map((val2) => {
-        if (val2) {
-          arr.push(val2);
-        }
-      });
-    } else {
-      arr.push(val[1][Object.keys(val[1])]);
-    }
-  };
-
-  const getWishlist = () => {
-    Fire.database()
-      .ref("wishlist")
-      .once("value")
-      .then((res) => {
-        const snapshotRes = res.val();
-
-        const arr1 = [];
-        const arr2 = [];
-        const arr3 = [];
-
-        if (snapshotRes) {
-          Object.entries(snapshotRes).map((val) => {
-            if (val[0] === "produk") {
-              filterWishlistProduct(val, arr1);
-            } else if (val[0] === "produk2") {
-              filterWishlistProduct(val, arr2);
-            } else if (val[0] === "produk3") {
-              filterWishlistProduct(val, arr3);
-            }
-          });
-        }
-
-        setProduct1(arr1);
-        setProduct2(arr2);
-        setProduct3(arr3);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
   const onRemove = (item, product, setProduct) => {
     let arr = [...product];
@@ -94,6 +51,8 @@ const Wishlist = ({ route }) => {
             horizontal
             renderItem={({ item }) => (
               <ProductCard
+                uid={uid}
+                product={product1}
                 onPress={() => handleBuy(item)}
                 onRemove={() => onRemove(item, product1, setProduct1)}
                 type="produk"
@@ -115,8 +74,13 @@ const Wishlist = ({ route }) => {
             horizontal
             renderItem={({ item }) => (
               <ProductCard
+                uid={uid}
+                product={product2}
                 onPress={() => handleBuy(item)}
-                onRemove={() => onRemove(item, product2, setProduct2)}
+                onRemove={() => {
+                  console.log(item);
+                  onRemove(item, product2, setProduct2);
+                }}
                 type="produk2"
                 item={item}
               />
@@ -136,6 +100,8 @@ const Wishlist = ({ route }) => {
             horizontal
             renderItem={({ item }) => (
               <ProductCard
+                uid={uid}
+                product={product3}
                 onPress={() => handleBuy(item)}
                 onRemove={() => onRemove(item, product3, setProduct3)}
                 type="produk3"

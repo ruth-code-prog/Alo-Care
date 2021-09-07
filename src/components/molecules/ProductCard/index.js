@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -7,62 +7,64 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { Button } from "../..";
 import { IconFavoriteActive, IconFavoriteInactive } from "../../../assets";
 import { Fire } from "../../../config";
 import { colors, showError, showSuccess } from "../../../utils";
 
-const ProductCard = ({ item, type, onRemove, onPress }) => {
+const ProductCard = ({
+  item,
+  type,
+  onRemove,
+  onPress,
+  uid,
+  product,
+  onAdd,
+}) => {
   const [isLoading, setLoading] = useState(false);
+  const [isWishlist, setWishlist] = useState(false);
+
+  useEffect(() => {
+    setWishlist(product.filter((val) => val?.image == item?.image)?.length > 0);
+  }, []);
 
   const handleChangeWishlist = () => {
     setLoading(true);
-    const urlFirebase = `${type}/${item?.id}`;
-    const urlWishlistFirebase = `wishlist/${type}/${item?.id}`;
-    Fire.database()
-      .ref(urlFirebase)
-      .set({
-        ...item,
-        isWishlist: !item?.isWishlist,
-      })
-      .then(() => {
-        if (item?.isWishlist) {
-          Fire.database()
-            .ref(urlWishlistFirebase)
-            .remove()
-            .then(() => {
-              setLoading(false);
-              onRemove && onRemove();
-              showSuccess("Berhasil menghapus barang dari wishlist");
-            })
-            .catch((err) => {
-              console.error(err);
-              showError("Gagal menghapus dari wishlist");
-              setLoading(false);
-            });
-        } else {
-          Fire.database()
-            .ref(urlWishlistFirebase)
-            .set({
-              ...item,
-              isWishlist: !item?.isWishlist,
-            })
-            .then(() => {
-              setLoading(false);
-              showSuccess("Berhasil menambahkan barang ke wishlist");
-            })
-            .catch((err) => {
-              console.error(err);
-              showError("Gagal menambahkan ke wishlist");
-              setLoading(false);
-            });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        showError("Gagal mengubah wishlist");
-        setLoading(false);
-      });
+    const urlWishlistFirebase = `users/${uid}/wishlist/${type}/${item?.id}`;
+    console.log("sss", urlWishlistFirebase);
+    if (product.filter((val) => val?.image == item?.image)?.length > 0) {
+      Fire.database()
+        .ref(urlWishlistFirebase)
+        .remove()
+        .then(() => {
+          console.log("ha");
+          setLoading(false);
+          onRemove && onRemove();
+          setWishlist(!isWishlist);
+          showSuccess("Berhasil menghapus barang dari wishlist");
+        })
+        .catch((err) => {
+          console.error(err);
+          showError("Gagal menghapus dari wishlist");
+          setLoading(false);
+        });
+    } else {
+      Fire.database()
+        .ref(urlWishlistFirebase)
+        .set(item)
+        .then(() => {
+          setLoading(false);
+          setWishlist(!isWishlist);
+          onAdd && onAdd();
+          showSuccess("Berhasil menambahkan barang ke wishlist");
+        })
+        .catch((err) => {
+          console.error(err);
+          showError("Gagal menambahkan ke wishlist");
+          setLoading(false);
+        });
+    }
   };
 
   return (
@@ -113,7 +115,7 @@ const ProductCard = ({ item, type, onRemove, onPress }) => {
           >
             {isLoading ? (
               <ActivityIndicator size={18} color={colors.primary} />
-            ) : item?.isWishlist ? (
+            ) : isWishlist ? (
               <IconFavoriteActive />
             ) : (
               <IconFavoriteInactive />

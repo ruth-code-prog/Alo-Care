@@ -7,8 +7,8 @@ const HomeProfile = ({onPress, profile}) => {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={profile.photo} style={styles.avatar} />
       <View>
-        <Text style={styles.name}>{profile.fullName}</Text>
-        <Text style={styles.profession}>{profile.profession}</Text>
+        <Text style={styles.name}>{profile?.fullName}</Text>
+        <Text style={styles.profession}>{profile?.profession}</Text>
       </View>
     </TouchableOpacity>
   );
