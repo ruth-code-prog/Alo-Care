@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import ImagePicker from "react-native-image-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 import { Header, ChatItem, InputChat } from "../../components";
 import {
   fonts,
@@ -164,17 +164,14 @@ const ChattingGroup = ({ navigation, route }) => {
   };
 
   const getImage = () => {
-    ImagePicker.showImagePicker(
-      { quality: 0.5, includeBase64: true },
-      (response) => {
-        if (response.didCancel || response.error) {
-          showError("oops, sepertinya anda tidak memilih foto nya?");
-        } else {
-          const source = { uri: response.uri };
-          setPhoto(`data:${response?.type};base64, ${response?.data}`);
-        }
+    launchImageLibrary({ quality: 0.5, includeBase64: true }, (response) => {
+      if (response.didCancel || response.error) {
+        showError("oops, sepertinya anda tidak memilih foto nya?");
+      } else {
+        const source = { uri: response.uri };
+        setPhoto(`data:${response?.type};base64, ${response?.data}`);
       }
-    );
+    });
   };
 
   return (
