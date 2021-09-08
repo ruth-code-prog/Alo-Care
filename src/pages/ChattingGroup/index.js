@@ -169,7 +169,7 @@ const ChattingGroup = ({ navigation, route }) => {
         showError("oops, sepertinya anda tidak memilih foto nya?");
       } else {
         const source = { uri: response.uri };
-        setPhoto(`data:${response?.type};base64, ${response?.data}`);
+        setPhoto(`data:${response?.type};base64, ${response?.base64}`);
       }
     });
   };
