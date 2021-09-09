@@ -16,16 +16,18 @@ import {
 import CurrencyFormatter from "react-native-currency-formatter";
 import TextTicker from "react-native-text-ticker";
 import { useSelector } from "react-redux";
-import { IconFavoriteActive, ILNullPhoto } from "../../assets";
+import { IconFavoriteActive, ILLogo, ILNullPhoto } from "../../assets";
 import {
   BannerSlider,
   Gap,
   HomeProfile,
+  ModalInvestation,
   NewsItem,
   OurStaffCategory,
   ProductCard,
   RatedOurStaff,
   TenorCard,
+  UserInvestationCard,
   VideoPlayer,
   WebItem,
 } from "../../components";
@@ -62,6 +64,8 @@ const OurStaff = ({ navigation }) => {
 
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
+  const [modalInvestation, setModalInvestation] = useState(false);
+  const [topInvestor, setTopInvestor] = useState({});
 
   const { token } = useSelector((state) => state.fcm);
   const [profile, setProfile] = useState({
@@ -96,6 +100,7 @@ const OurStaff = ({ navigation }) => {
     getBanners();
     getRunningText();
     getUserList();
+    getTopInvestor();
   }, []);
 
   useFocusEffect(
@@ -466,6 +471,20 @@ const OurStaff = ({ navigation }) => {
     });
   };
 
+  const getTopInvestor = () => {
+    Fire.database()
+      .ref("user_investasi")
+      .limitToFirst(1)
+      .once("value")
+      .then((res) => {
+        let filtered = res?.val().filter((val) => val);
+        setTopInvestor(filtered[0]);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -485,7 +504,7 @@ const OurStaff = ({ navigation }) => {
         </View>
         <ScrollView ref={pagesScrollRef} showsVerticalScrollIndicator={false}>
           <MemoView style={styles.wrapperSection}>
-            <Gap height={30} />
+            <Gap height={16} />
             <MemoView style={styles.row}>
               <HomeProfile
                 profile={profile}
@@ -508,7 +527,6 @@ const OurStaff = ({ navigation }) => {
                 <View style={styles.rightContainer}>
                   <TouchableOpacity
                     onPress={() => {
-                      // Linking.openURL("https://wa.me/+62895600394345")
                       navigation.navigate("Chatting", {
                         data: ourstaffs[0]?.data,
                         chatContent: `Saya ingin bertanya mengenai wallet`,
@@ -601,6 +619,19 @@ const OurStaff = ({ navigation }) => {
             <Text style={styles.sectionLabel}>Web</Text>
           </View>
           {renderWeb()}
+          <Gap height={30} />
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={styles.userInvestationTitleContainer}>
+              <Text style={styles.userInvestationTitle}>
+                Alo Care User Investasi
+              </Text>
+              <TouchableOpacity onPress={() => setModalInvestation(true)}>
+                <Text style={{ color: colors.primary }}>Lihat Semua ></Text>
+              </TouchableOpacity>
+            </View>
+            <Gap height={16} />
+            <UserInvestationCard item={topInvestor} />
+          </View>
           <Gap height={30} />
           <Text style={styles.transaksi}>Transaksi</Text>
           <Text style={styles.pm}>Pembiayaan Multiguna</Text>
@@ -788,6 +819,10 @@ const OurStaff = ({ navigation }) => {
         visible={videoModal}
         onClose={() => setVideoModal(false)}
       />
+      <ModalInvestation
+        visible={modalInvestation}
+        onClose={() => setModalInvestation(false)}
+      />
     </View>
   );
 };
@@ -861,6 +896,17 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 16,
     fontWeight: "bold",
+  },
+  userInvestationTitle: {
+    fontSize: 16,
+    fontFamily: fonts.primary[600],
+    color: colors.text.primary,
+    fontWeight: "bold",
+  },
+  userInvestationTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   transaksi: {
     fontSize: 16,

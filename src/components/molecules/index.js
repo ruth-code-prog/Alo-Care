@@ -14,6 +14,8 @@ import ProfileItem from "./ProfileItem";
 import Loading from "./Loading";
 import BannerSlider from "./BannerSlider";
 import ProductCard from "./ProductCard";
+import UserInvestationCard from "./UserInvestationCard";
+import ModalInvestation from "./ModalInvestation";
 
 export {
   Header,
@@ -32,4 +34,6 @@ export {
   Loading,
   BannerSlider,
   ProductCard,
+  UserInvestationCard,
+  ModalInvestation,
 };

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getChatTime = (date) => {
   const hour = date.getHours();
   const minutes = date.getMinutes();
@@ -11,4 +13,11 @@ export const setDateChat = (oldDate) => {
   const date = ("0" + oldDate.getDate()).slice(-2);
 
   return `${year}-${month}-${date}`;
+};
+
+export const getFullDate = (dateArg) => {
+  const date = new Date(dateArg).getDate();
+  const month = moment.months()[new Date(dateArg).getMonth()];
+  const year = new Date(dateArg).getFullYear();
+  return `${date} ${month} ${year}`;
 };
