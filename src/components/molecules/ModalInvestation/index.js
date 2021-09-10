@@ -70,23 +70,23 @@ const ModalInvestation = ({ visible, onClose }) => {
             />
             <Gap height={8} />
           </View>
-          {loading ? (
-            <View style={{ marginBottom: 32 }}>
-              <ActivityIndicator color={colors.primary} size={32} />
-            </View>
-          ) : (
-            <FlatList
-              contentContainerStyle={{
-                paddingHorizontal: 16,
-                paddingBottom: 16,
-              }}
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <Gap height={16} />}
-              keyExtractor={(_, index) => index.toString()}
-              data={data}
-              renderItem={({ item }) => <UserInvestationCard item={item} />}
-            />
-          )}
+          <FlatList
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+            }}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <Gap height={16} />}
+            keyExtractor={(_, index) => index.toString()}
+            data={data}
+            renderItem={({ item }) => {
+              return loading ? (
+                <ActivityIndicator size={32} color={colors.primary} />
+              ) : (
+                <UserInvestationCard item={item} />
+              );
+            }}
+          />
         </View>
       </View>
     </Modal>
