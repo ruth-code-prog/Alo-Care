@@ -80,11 +80,11 @@ const ModalInvestation = ({ visible, onClose }) => {
             keyExtractor={(_, index) => index.toString()}
             data={data}
             renderItem={({ item }) => {
-              return loading ? (
-                <ActivityIndicator size={32} color={colors.primary} />
-              ) : (
-                <UserInvestationCard item={item} />
-              );
+              if (loading) {
+                return <ActivityIndicator size={32} color={colors.primary} />;
+              } else {
+                return <UserInvestationCard item={item} />;
+              }
             }}
           />
         </View>
