@@ -34,19 +34,29 @@ const Chatting = ({ navigation, route }) => {
 
             let realData = {};
             const allDataChat = [];
+            const ordered = Object.keys(dataSnapshot)
+              .sort()
+              .reduce((obj, key) => {
+                obj[key] = dataSnapshot[key];
+                return obj;
+              }, {});
+            console.log("ordered snaps", ordered);
+            console.log("snaps", dataSnapshot);
 
-            Object.entries(dataSnapshot)
-              .reverse()
+            Object.entries(ordered)
+              // .reverse()
               .map((val) => {
                 realData[val[0]] = val[1];
               });
+            // console.log("yuhuu", realData);
 
             Object.keys(realData).map((key) => {
               const dataChat = realData[key];
 
               let valueDataChat = Object.values(dataChat);
+              // SORT TIME
               valueDataChat = valueDataChat.sort((a, b) => {
-                return b.chatDate - a.chatDate;
+                return new Date(b.chatDate) - new Date(a.chatDate);
               });
 
               valueDataChat.reverse();

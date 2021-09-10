@@ -625,7 +625,9 @@ const OurStaff = ({ navigation }) => {
               <Text style={styles.userInvestationTitle}>
                 Alo Care User Investasi
               </Text>
-              <TouchableOpacity onPress={() => setModalInvestation(true)}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("UserInvestation")}
+              >
                 <Text style={{ color: colors.primary }}>Lihat Semua ></Text>
               </TouchableOpacity>
             </View>

@@ -15,6 +15,7 @@ import OurStaffProfile from "./OurStaffProfile";
 import Detail from "./Detail";
 import ForgotPass from "./ForgetPass";
 import Wishlist from "./Wishlist";
+import UserInvestation from "./UserInvestation";
 
 export {
   Splash,
@@ -34,4 +35,5 @@ export {
   ForgotPass,
   ChattingGroup,
   Wishlist,
+  UserInvestation,
 };
