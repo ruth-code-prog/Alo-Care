@@ -116,37 +116,37 @@ const Chatting = ({ navigation, route }) => {
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
-    xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-      }
-    });
+    // xhr.addEventListener("readystatechange", function () {
+    //   if (this.readyState === 4) {
+    //     console.log(this.responseText);
+    //   }
+    // });
 
-    xhr.onreadystatechange = (e) => {
-      if (xhr.readyState !== 4) {
-        return;
-      }
+    // xhr.onreadystatechange = (e) => {
+    //   if (xhr.readyState !== 4) {
+    //     return;
+    //   }
 
-      if (xhr.status === 200) {
-        console.log("success", xhr.responseText);
-      } else {
-        console.warn("error");
-      }
-    };
+    //   if (xhr.status === 200) {
+    //     console.log("success", xhr.responseText);
+    //   } else {
+    //     console.warn("error");
+    //   }
+    // };
 
-    xhr.open("POST", "https://fcm.googleapis.com/fcm/send");
-    xhr.setRequestHeader("content-type", "application/json");
-    xhr.setRequestHeader(
-      "authorization",
-      "key=AAAAmCard3M:APA91bGCNpwLLKIVj-I6rC9KBbPwHuKlYwEDB1Mvf0bs3D15IpKnk32bSLWXwQcd2u8e_k0tepl9NbyjmURYwNfrUdggbdi3nX1bJz-hOpQ20XdUwsKQbROZZOi9txHEdANq_tJJg-uJ"
-    );
-    xhr.setRequestHeader("cache-control", "no-cache");
-    xhr.setRequestHeader(
-      "postman-token",
-      "5ba4747d-01b4-80e6-1ce5-e43f0c3b4a42"
-    );
+    // xhr.open("POST", "https://fcm.googleapis.com/fcm/send");
+    // xhr.setRequestHeader("content-type", "application/json");
+    // xhr.setRequestHeader(
+    //   "authorization",
+    //   "key=AAAAmCard3M:APA91bGCNpwLLKIVj-I6rC9KBbPwHuKlYwEDB1Mvf0bs3D15IpKnk32bSLWXwQcd2u8e_k0tepl9NbyjmURYwNfrUdggbdi3nX1bJz-hOpQ20XdUwsKQbROZZOi9txHEdANq_tJJg-uJ"
+    // );
+    // xhr.setRequestHeader("cache-control", "no-cache");
+    // xhr.setRequestHeader(
+    //   "postman-token",
+    //   "5ba4747d-01b4-80e6-1ce5-e43f0c3b4a42"
+    // );
 
-    xhr.send(datas);
+    // xhr.send(datas);
   };
 
   const chatSend = (type) => {
