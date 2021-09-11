@@ -77,28 +77,31 @@ const Messages = ({ navigation }) => {
             realData.push({ data: val[1] });
           });
           let filterData = realData?.filter((val) => val?.data?.uid);
-          Fire.database()
-            .ref("ourstaffs/")
-            .once("value")
-            .then(async (res) => {
-              if (res.val()) {
-                const dataStaff = res.val();
-                const realDataStaff = [];
-                Object.entries(dataStaff).map((val) => {
-                  realDataStaff.push({ data: val[1] });
-                });
-                filterData = [
-                  ...filterData,
-                  ...realDataStaff?.filter((val) => val?.data?.uid),
-                ];
-                setUserList([...userList, ...filterData]);
-                setUserListAll([...userListAll, ...filterData]);
-                setLoading(false);
-              }
-            })
-            .catch((err) => {
-              showError(err.message);
-            });
+          setUserList([...userList, ...filterData]);
+          setUserListAll([...userListAll, ...filterData]);
+          setLoading(false);
+          // Fire.database()
+          //   .ref("ourstaffs/")
+          //   .once("value")
+          //   .then(async (res) => {
+          //     if (res.val()) {
+          //       const dataStaff = res.val();
+          //       const realDataStaff = [];
+          //       Object.entries(dataStaff).map((val) => {
+          //         realDataStaff.push({ data: val[1] });
+          //       });
+          //       filterData = [
+          //         ...filterData,
+          //         ...realDataStaff?.filter((val) => val?.data?.uid),
+          //       ];
+          //       setUserList([...userList, ...filterData]);
+          //       setUserListAll([...userListAll, ...filterData]);
+          //       setLoading(false);
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     showError(err.message);
+          //   });
         }
       })
       .catch((err) => {
