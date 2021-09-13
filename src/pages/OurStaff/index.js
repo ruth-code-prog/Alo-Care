@@ -109,6 +109,8 @@ const OurStaff = ({ navigation }) => {
         if (data) {
           getUserHomeData(data.uid);
           getWishlist(data?.uid);
+        } else {
+          AsyncStorage.clear();
         }
       });
     }, [])

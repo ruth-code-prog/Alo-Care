@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingLeft: 16,
     flexDirection: "row",
+    maxWidth: "80%",
   },
   avatar: { width: 30, height: 30, borderRadius: 30 / 2, marginRight: 12 },
   chatContent: {

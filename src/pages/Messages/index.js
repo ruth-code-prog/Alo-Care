@@ -33,17 +33,17 @@ const Messages = ({ navigation }) => {
 
         const promises = await Object.keys(oldData).map(async (key) => {
           const urlUidOurstaff = `ourstaffs/${oldData[key].uidPartner}`;
-          const urlUidUsers = `users/${oldData[key].uidPartner}`;
+          // const urlUidUsers = `users/${oldData[key].uidPartner}`;
 
           const detailOurstaff = await rootDB
             .child(urlUidOurstaff)
             .once("value");
-          const detailUsers = await rootDB.child(urlUidUsers).once("value");
+          // const detailUsers = await rootDB.child(urlUidUsers).once("value");
 
           data.push({
             id: key,
             detailOurstaff: detailOurstaff.val(),
-            detailUsers: detailUsers.val(),
+            // detailUsers: detailUsers.val(),
             ...oldData[key],
           });
         });
@@ -67,7 +67,7 @@ const Messages = ({ navigation }) => {
 
   const getUserList = () => {
     Fire.database()
-      .ref("users/")
+      .ref("ourstaffs/")
       .once("value")
       .then(async (res) => {
         if (res.val()) {
