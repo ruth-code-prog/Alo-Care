@@ -297,6 +297,12 @@ const Chatting = ({ navigation, route }) => {
   const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
+    if (dataOurstaff?.chatContent) {
+      setChatContent(dataOurstaff?.chatContent);
+    }
+  }, []);
+
+  useEffect(() => {
     if (user.uid !== undefined) {
       const chatID = `${user.uid}_${dataOurstaff.data.uid}`;
       const urlFirebase = `chatting/${chatID}/allChat/`;

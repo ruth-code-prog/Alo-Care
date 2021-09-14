@@ -19,6 +19,7 @@ import {
   ChattingGroup,
   Wishlist,
   UserInvestation,
+  ListTransaction,
 } from "../pages";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigator } from "../components";
@@ -32,6 +33,7 @@ const MainApp = () => {
       <Tab.Screen name="Home" component={OurStaff} />
       <Tab.Screen name="Pesan" component={Messages} />
       <Tab.Screen name="Informasi" component={Informasi} />
+      <Tab.Screen name="Daftar Transaksi" component={ListTransaction} />
     </Tab.Navigator>
   );
 };

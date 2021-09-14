@@ -32,7 +32,6 @@ const ProductCard = ({
   const handleChangeWishlist = () => {
     setLoading(true);
     const urlWishlistFirebase = `users/${uid}/wishlist/${type}/${item?.id}`;
-    console.log("sss", urlWishlistFirebase);
     if (product.filter((val) => val?.image == item?.image)?.length > 0) {
       Fire.database()
         .ref(urlWishlistFirebase)

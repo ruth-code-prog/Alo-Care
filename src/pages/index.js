@@ -16,6 +16,7 @@ import Detail from "./Detail";
 import ForgotPass from "./ForgetPass";
 import Wishlist from "./Wishlist";
 import UserInvestation from "./UserInvestation";
+import ListTransaction from "./ListTransaction";
 
 export {
   Splash,
@@ -36,4 +37,5 @@ export {
   ChattingGroup,
   Wishlist,
   UserInvestation,
+  ListTransaction,
 };

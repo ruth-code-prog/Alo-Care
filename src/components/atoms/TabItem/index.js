@@ -23,6 +23,9 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
     if (title === 'Informasi') {
       return active ? <IconInformasiActive /> : <IconInformasi />;
     }
+    if (title === 'Daftar Transaksi') {
+      return active ? <IconInformasiActive /> : <IconInformasi />;
+    }
     return <IconOurstaff />;
   };
   return (
