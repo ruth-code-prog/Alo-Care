@@ -6,6 +6,8 @@ import TabItem from "./TabItem";
 import TenorCard from "./TenorCard";
 import VideoPlayer from "./VideoPlayer";
 import CircleStory from "./CircleStory";
+import TransactionItem from "./TransactionItem";
+import ProductTransaction from "./ProductTransaction";
 
 export {
   Button,
@@ -16,4 +18,6 @@ export {
   TenorCard,
   VideoPlayer,
   CircleStory,
+  TransactionItem,
+  ProductTransaction,
 };

@@ -1,0 +1,66 @@
+{
+  "awikwok1": {
+    "produk": [
+      {
+        "desc": "kopoi enak nih",
+        "id": 1,
+        "image": "https://firebasestorage.googleapis.com/v0/b/ramah-9ef47.appspot.com/o/the%20Creative%20Process.png?alt=media&token=68baf902-c187-4db8-ae64-4bb83a432ecb",
+        "title": "Kofpia",
+        "qty": 1
+      }
+    ],
+    "resi": "AB1923919022",
+    "sent_history": [
+      {
+        "date": "10/20/2021 09:08",
+        "desc": "Paket telah diterima"
+      },
+      {
+        "date": "10/15/2021 04:08",
+        "desc": "Paket telah sampai Amerika"
+      }
+    ],
+    "sub_total": 50000
+  },
+  "awikwok2": {
+    "produk": [
+      {
+        "desc": "kopoi enak nih",
+        "id": 1,
+        "image": "https://firebasestorage.googleapis.com/v0/b/ramah-9ef47.appspot.com/o/the%20Creative%20Process.png?alt=media&token=68baf902-c187-4db8-ae64-4bb83a432ecb",
+        "title": "Kofpia",
+        "qty": 1
+      },
+      {
+        "desc": "kopoi agak nih",
+        "id": 2,
+        "image": "https://firebasestorage.googleapis.com/v0/b/ramah-9ef47.appspot.com/o/the%20Creative%20Process.png?alt=media&token=68baf902-c187-4db8-ae64-4bb83a432ecb",
+        "title": "Kofpia 2",
+        "qty": 2
+      },
+      {
+        "desc": "Obat sehat",
+        "id": 3,
+        "image": "https://firebasestorage.googleapis.com/v0/b/ramah-9ef47.appspot.com/o/download%20(1).jpeg?alt=media&token=8937c9ed-5bec-4bbc-8d09-e21a3cda1c5c",
+        "title": "Paracetamol 3",
+        "qty": 1
+      }
+    ],
+    "resi": "AABBCC12331",
+    "sent_history": [
+      {
+        "date": "10/20/2021 09:08",
+        "desc": "Paket telah diterima"
+      },
+      {
+        "date": "10/15/2021 04:08",
+        "desc": "Paket telah sampai Amerika"
+      },
+      {
+        "date": "10/11/2021 15:08",
+        "desc": "Paket telah diinput"
+      }
+    ],
+    "sub_total": 150000
+  }
+}

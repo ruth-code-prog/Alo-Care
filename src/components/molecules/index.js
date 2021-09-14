@@ -16,6 +16,7 @@ import BannerSlider from "./BannerSlider";
 import ProductCard from "./ProductCard";
 import UserInvestationCard from "./UserInvestationCard";
 import ModalInvestation from "./ModalInvestation";
+import TransactionList from "./TransactionList";
 
 export {
   Header,
@@ -36,4 +37,5 @@ export {
   ProductCard,
   UserInvestationCard,
   ModalInvestation,
+  TransactionList,
 };

@@ -85,11 +85,11 @@ const OurStaff = ({ navigation }) => {
   const pagesScrollRef = useRef(null);
 
   useEffect(() => {
-    getCategoryOurstaff();
-    getTopRatedOurstaffs();
+    // getCategoryOurstaff();
+    // getTopRatedOurstaffs();
 
-    getNews();
-    getWeb();
+    // getNews();
+    // getWeb();
 
     navigation.addListener("focus", () => {
       getUserData();
@@ -97,10 +97,10 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    getBanners();
-    getRunningText();
-    getUserList();
-    getTopInvestor();
+    // getBanners();
+    // getRunningText();
+    // getUserList();
+    // getTopInvestor();
   }, []);
 
   useFocusEffect(
@@ -147,7 +147,7 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, [userWishlist]);
 
   const getWishlist = (uid) => {

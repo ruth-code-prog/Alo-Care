@@ -17,6 +17,7 @@ import ForgotPass from "./ForgetPass";
 import Wishlist from "./Wishlist";
 import UserInvestation from "./UserInvestation";
 import ListTransaction from "./ListTransaction";
+import TransactionDetail from "./TransactionDetail";
 
 export {
   Splash,
@@ -38,4 +39,5 @@ export {
   Wishlist,
   UserInvestation,
   ListTransaction,
+  TransactionDetail,
 };
