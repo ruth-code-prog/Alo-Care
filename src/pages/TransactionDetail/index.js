@@ -3,6 +3,7 @@ import React from "react";
 import {
   FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,83 +15,86 @@ import { colors, getFullDate } from "../../utils";
 
 const TransactionDetail = () => {
   const { item } = useRoute().params || {};
-  console.log("aps nich", item);
+
   return (
     <View style={styles.pages}>
-      <View>
-        <Text style={styles.sectionTitle}>List Item</Text>
-        {item?.produk?.map((val, index) => (
-          <View>
-            <ProductTransaction item={val} />
-            <Gap height={8} />
-          </View>
-        ))}
-      </View>
-      <Gap height={8} />
-      <Text style={{ fontSize: 16 }}>
-        Sub Total:{" "}
-        <Text style={{ color: colors.primary, fontWeight: "bold" }}>
-          {CurrencyFormatter(item?.sub_total)}
-        </Text>
-      </Text>
-      <Gap height={24} />
-      <View>
-        <Text style={styles.sectionTitle}>Riwayat Pengiriman</Text>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <Text>
-            No Resi: <Text style={{ color: colors.primary }}>{item?.resi}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View>
+          <Text style={styles.sectionTitle}>List Item</Text>
+          {item?.produk?.map((val, index) => (
+            <View>
+              <ProductTransaction item={val} />
+              <Gap height={8} />
+            </View>
+          ))}
+        </View>
+        <Gap height={8} />
+        <Text style={{ fontSize: 16 }}>
+          Sub Total:{" "}
+          <Text style={{ color: colors.primary, fontWeight: "bold" }}>
+            {CurrencyFormatter(item?.sub_total)}
           </Text>
-          <Gap width={8} />
-          {/* <TouchableOpacity>
+        </Text>
+        <Gap height={24} />
+        <View>
+          <Text style={styles.sectionTitle}>Riwayat Pengiriman</Text>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Text>
+              No Resi:{" "}
+              <Text style={{ color: colors.primary }}>{item?.resi}</Text>
+            </Text>
+            <Gap width={8} />
+            {/* <TouchableOpacity>
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               SALIN
             </Text>
           </TouchableOpacity> */}
-        </View>
-        <Gap height={24} />
-        <FlatList
-          keyExtractor={(_, index) => index.toString()}
-          data={item?.sent_history}
-          renderItem={({ item: listItem, index }) => (
-            <View>
-              <View style={[{ flexDirection: "row" }, styles.container]}>
-                <View style={styles.leftContainer}>
-                  <Text
-                    style={{
-                      textAlign: "right",
-                      fontSize: 12,
-                      color: index ? "grey" : colors.text.primary,
-                    }}
-                  >
-                    {/* {index === 0
+          </View>
+          <Gap height={24} />
+          <FlatList
+            keyExtractor={(_, index) => index.toString()}
+            data={item?.sent_history}
+            renderItem={({ item: listItem, index }) => (
+              <View>
+                <View style={[{ flexDirection: "row" }, styles.container]}>
+                  <View style={styles.leftContainer}>
+                    <Text
+                      style={{
+                        textAlign: "right",
+                        fontSize: 12,
+                        color: index ? "grey" : colors.text.primary,
+                      }}
+                    >
+                      {/* {index === 0
                       ? `Hari ini ${getTime(item?.status_date)}`
                       : `${getFullDate(item?.status_date)}`} */}
-                    {getFullDate(listItem?.date)}
+                      {getFullDate(listItem?.date)}
+                    </Text>
+                  </View>
+                  <View style={[styles.midContainer]}>
+                    {index === 5 - 1 ? null : <View style={styles.line} />}
+                    <View
+                      style={
+                        index === 0
+                          ? styles.dotStyleActive
+                          : styles.dotStyleNotActive
+                      }
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.rightContainer,
+                      { color: index ? "grey" : colors.primary },
+                    ]}
+                  >
+                    {listItem?.desc}
                   </Text>
                 </View>
-                <View style={[styles.midContainer]}>
-                  {index === 5 - 1 ? null : <View style={styles.line} />}
-                  <View
-                    style={
-                      index === 0
-                        ? styles.dotStyleActive
-                        : styles.dotStyleNotActive
-                    }
-                  />
-                </View>
-                <Text
-                  style={[
-                    styles.rightContainer,
-                    { color: index ? "grey" : colors.primary },
-                  ]}
-                >
-                  {listItem?.desc}
-                </Text>
               </View>
-            </View>
-          )}
-        />
-      </View>
+            )}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };

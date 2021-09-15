@@ -27,8 +27,7 @@ const ListTransaction = () => {
   const getList = () => {
     Fire.database()
       .ref(`transaction/${user?.uid}/`)
-      .once("value")
-      .then((snapshot) => {
+      .on("value", (snapshot) => {
         const dataSnapshot = snapshot.val();
         const realData = [];
         if (dataSnapshot) {
@@ -42,7 +41,9 @@ const ListTransaction = () => {
 
   return (
     <View style={styles.pages}>
-      {data?.length > 0 ? <TransactionList data={data} /> : null}
+      <View style={styles.content}>
+        {data?.length > 0 ? <TransactionList data={data} /> : null}
+      </View>
     </View>
   );
 };
@@ -52,6 +53,12 @@ export default ListTransaction;
 const styles = StyleSheet.create({
   pages: {
     flex: 1,
+    backgroundColor: colors.secondary,
+  },
+  content: {
+    flex: 1,
     backgroundColor: colors.white,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });
