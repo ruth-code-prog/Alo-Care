@@ -21,6 +21,8 @@ import IconRate from "./ic-rate.svg";
 import IconHelp from "./ic-help.svg";
 import IconFavoriteActive from "./ic-favorite-active.svg";
 import IconFavoriteInactive from "./ic-favorite-inactive.svg";
+import IconParcelActive from "./ic-parcel-active.svg";
+import IconParcelInactive from "./ic-parcel.svg";
 
 export {
   IconBackDark,
@@ -46,4 +48,6 @@ export {
   IconHelp,
   IconFavoriteActive,
   IconFavoriteInactive,
+  IconParcelActive,
+  IconParcelInactive,
 };

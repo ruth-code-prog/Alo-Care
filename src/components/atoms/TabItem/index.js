@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import {
   IconMessages,
   IconMessagesActive,
@@ -9,22 +9,24 @@ import {
   IconOurstaffActive,
   IconHome,
   IconHomeActive,
-} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+  IconParcelActive,
+  IconParcelInactive,
+} from "../../../assets";
+import { colors, fonts } from "../../../utils";
 
-const TabItem = ({title, active, onPress, onLongPress}) => {
+const TabItem = ({ title, active, onPress, onLongPress }) => {
   const Icon = () => {
-    if (title === 'Home') {
+    if (title === "Home") {
       return active ? <IconHomeActive /> : <IconHome />;
     }
-    if (title === 'Pesan') {
+    if (title === "Pesan") {
       return active ? <IconMessagesActive /> : <IconMessages />;
     }
-    if (title === 'Informasi') {
+    if (title === "Informasi") {
       return active ? <IconInformasiActive /> : <IconInformasi />;
     }
-    if (title === 'Daftar Transaksi') {
-      return active ? <IconInformasiActive /> : <IconInformasi />;
+    if (title === "Daftar Transaksi") {
+      return active ? <IconParcelActive /> : <IconParcelInactive />;
     }
     return <IconOurstaff />;
   };
@@ -32,7 +34,8 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      onLongPress={onLongPress}>
+      onLongPress={onLongPress}
+    >
       <Icon />
       <Text style={styles.text(active)}>{title}</Text>
     </TouchableOpacity>
@@ -42,11 +45,17 @@ const TabItem = ({title, active, onPress, onLongPress}) => {
 export default TabItem;
 
 const styles = StyleSheet.create({
-  container: {alignItems: 'center'},
-  text: active => ({
+  container: {
+    alignItems: "center",
+    width: "25%",
+    // borderWidth: 1,
+    // borderColor: "white",
+  },
+  text: (active) => ({
     fontSize: 10,
     color: active ? colors.text.menuActive : colors.text.menuInactive,
     fontFamily: fonts.primary[600],
     marginTop: 4,
+    textAlign: "center",
   }),
 });
