@@ -86,11 +86,11 @@ const OurStaff = ({ navigation }) => {
   const pagesScrollRef = useRef(null);
 
   useEffect(() => {
-    // getCategoryOurstaff();
-    // getTopRatedOurstaffs();
+    getCategoryOurstaff();
+    getTopRatedOurstaffs();
 
-    // getNews();
-    // getWeb();
+    getNews();
+    getWeb();
 
     navigation.addListener("focus", () => {
       getUserData();
@@ -98,9 +98,9 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    // getBanners();
-    // getRunningText();
-    // getUserList();
+    getBanners();
+    getRunningText();
+    getUserList();
     getTopInvestor();
     getMember();
   }, []);
@@ -149,7 +149,7 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // getProducts();
+    getProducts();
   }, [userWishlist]);
 
   const getMember = () => {
