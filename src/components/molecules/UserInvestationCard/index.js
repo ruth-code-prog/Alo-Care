@@ -7,7 +7,6 @@ import { colors, fonts, getFullDate } from "../../../utils";
 
 const UserInvestationCard = ({ item, type }) => {
   if (type === "member") {
-    console.log(item)
     return (
       <View style={styles.container}>
         <View style={styles.userInvestationTitleContainer}>

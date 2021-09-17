@@ -27,7 +27,7 @@ const MemberAlocare = ({ visible, onClose }) => {
     setLoading(true);
     let arr = [...allData];
     var searchRegex = new RegExp(val, "i");
-    arr = arr.filter((item) => searchRegex?.test(item?.user_id));
+    arr = arr.filter((item) => searchRegex?.test(item?.code));
     setData(arr);
     setTimeout(() => {
       setLoading(false);
