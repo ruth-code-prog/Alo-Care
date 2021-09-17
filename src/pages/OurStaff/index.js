@@ -66,6 +66,7 @@ const OurStaff = ({ navigation }) => {
   const [runningText, setRunningText] = useState(null);
   const [modalInvestation, setModalInvestation] = useState(false);
   const [topInvestor, setTopInvestor] = useState({});
+  const [memberData, setMemberData] = useState({});
 
   const { token } = useSelector((state) => state.fcm);
   const [profile, setProfile] = useState({
@@ -85,11 +86,11 @@ const OurStaff = ({ navigation }) => {
   const pagesScrollRef = useRef(null);
 
   useEffect(() => {
-    getCategoryOurstaff();
-    getTopRatedOurstaffs();
+    // getCategoryOurstaff();
+    // getTopRatedOurstaffs();
 
-    getNews();
-    getWeb();
+    // getNews();
+    // getWeb();
 
     navigation.addListener("focus", () => {
       getUserData();
@@ -97,10 +98,11 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    getBanners();
-    getRunningText();
-    getUserList();
+    // getBanners();
+    // getRunningText();
+    // getUserList();
     getTopInvestor();
+    getMember();
   }, []);
 
   useFocusEffect(
@@ -147,8 +149,21 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, [userWishlist]);
+
+  const getMember = () => {
+    Fire.database()
+      .ref(`member_alocare`)
+      .limitToFirst(1)
+      .once("value")
+      .then((snapshot) => {
+        const dataSnapshot = snapshot.val();
+        if (dataSnapshot) {
+          setMemberData(dataSnapshot?.filter((val) => val)[0]);
+        }
+      });
+  };
 
   const getWishlist = (uid) => {
     Fire.database()
@@ -156,7 +171,6 @@ const OurStaff = ({ navigation }) => {
       .once("value")
       .then((res) => {
         const snapshotRes = res.val();
-        console.log("shiwiww,", snapshotRes);
         const arr1 = [];
         const arr2 = [];
         const arr3 = [];
@@ -816,6 +830,18 @@ const OurStaff = ({ navigation }) => {
               ))
             )}
           </ScrollView>
+          <View style={{ paddingHorizontal: 16, marginBottom: 40 }}>
+            <View style={styles.userInvestationTitleContainer}>
+              <Text style={styles.userInvestationTitle}>Member Alocare</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("MemberAlocare")}
+              >
+                <Text style={{ color: colors.primary }}>Lihat Semua ></Text>
+              </TouchableOpacity>
+            </View>
+            <Gap height={16} />
+            <UserInvestationCard type="member" item={memberData} />
+          </View>
         </ScrollView>
       </View>
       <VideoPlayer

@@ -5,7 +5,29 @@ import { Gap } from "../..";
 import { ILLogo } from "../../../assets";
 import { colors, fonts, getFullDate } from "../../../utils";
 
-const UserInvestationCard = ({ item }) => {
+const UserInvestationCard = ({ item, type }) => {
+  if (type === "member") {
+    console.log(item)
+    return (
+      <View style={styles.container}>
+        <View style={styles.userInvestationTitleContainer}>
+          <ILLogo height={36} width={36} />
+          <Text style={styles.userInvestationTitle}>Member Alo Care</Text>
+        </View>
+        <Gap height={24} />
+        <View style={{ paddingHorizontal: 8 }}>
+          <Text>Kode</Text>
+          <Text style={styles.nilai}>{item?.code}</Text>
+        </View>
+        <Gap height={24} />
+        <View style={{ paddingHorizontal: 8 }}>
+          <Text>Nama Member: {item?.member_name}</Text>
+          <Text>Lokasi: {item?.location}</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.userInvestationTitleContainer}>

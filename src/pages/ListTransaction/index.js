@@ -42,7 +42,7 @@ const ListTransaction = () => {
   return (
     <View style={styles.pages}>
       <View style={styles.content}>
-        {data?.length > 0 ? <TransactionList data={data} /> : null}
+        <TransactionList data={data} />
       </View>
     </View>
   );
