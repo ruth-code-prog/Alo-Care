@@ -22,6 +22,7 @@ import {
   Gap,
   HomeProfile,
   ModalInvestation,
+  ModalPassword,
   NewsItem,
   OurStaffCategory,
   ProductCard,
@@ -48,6 +49,9 @@ const MemoTouchableOpacity = memo(TouchableOpacity);
 
 const OurStaff = ({ navigation }) => {
   const [news, setNews] = useState([]);
+  const [allNews, setAllNews] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(false);
+
   const [web, setWeb] = useState([]);
   const [categoryOurstaff, setCategoryOurstaff] = useState([]);
   const [ourstaffs, setOurstaffs] = useState([]);
@@ -76,6 +80,7 @@ const OurStaff = ({ navigation }) => {
   });
   const [videoLink, setVideoLink] = useState("");
   const [videoModal, setVideoModal] = useState(false);
+  const [modalPassword, setModalPassword] = useState(false);
 
   const [userWishlist, setUserWishlist] = useFormSoul({
     product1: [],
@@ -86,11 +91,11 @@ const OurStaff = ({ navigation }) => {
   const pagesScrollRef = useRef(null);
 
   useEffect(() => {
-    getCategoryOurstaff();
-    getTopRatedOurstaffs();
+    // getCategoryOurstaff();
+    // getTopRatedOurstaffs();
 
     getNews();
-    getWeb();
+    // getWeb();
 
     navigation.addListener("focus", () => {
       getUserData();
@@ -98,11 +103,11 @@ const OurStaff = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    getBanners();
-    getRunningText();
-    getUserList();
-    getTopInvestor();
-    getMember();
+    // getBanners();
+    // getRunningText();
+    // getUserList();
+    // getTopInvestor();
+    // getMember();
   }, []);
 
   useFocusEffect(
@@ -149,7 +154,7 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, [userWishlist]);
 
   const getMember = () => {
@@ -267,6 +272,7 @@ const OurStaff = ({ navigation }) => {
           const data = res.val();
           const filterData = data.filter((el) => el !== null);
           setNews(filterData);
+          setAllNews(filterData);
         }
       })
       .catch((err) => {
@@ -432,6 +438,16 @@ const OurStaff = ({ navigation }) => {
     Linking.openURL("https://" + url);
   };
 
+  const handleNewsFilter = (val) => {
+    setNewsLoading(true);
+    let arr = [...allNews];
+    var searchRegex = new RegExp(val, "i");
+    arr = arr.filter((item) => searchRegex?.test(item?.title));
+    setNews(arr);
+    setTimeout(() => {
+      setNewsLoading(false);
+    }, 1500);
+  };
   const handleFilter = (val, productType) => {
     if (productType === "1") {
       setSearchProductLoading(true);
@@ -630,7 +646,31 @@ const OurStaff = ({ navigation }) => {
             })}
             <Text style={styles.sectionLabel}>Video Info and Trending</Text>
           </MemoView>
-          {renderNews()}
+          <View>
+            <TextInput
+              onChangeText={(val) => handleNewsFilter(val)}
+              selectTextOnFocus
+              style={styles.searchInput}
+              placeholder="Cari Info dan Trending"
+            />
+          </View>
+          {newsLoading ? (
+            <View style={{ padding: 20 }}>
+              <ActivityIndicator size={24} color={colors.primary} />
+            </View>
+          ) : (
+            renderNews()
+          )}
+          <TouchableOpacity
+            onPress={() => setModalPassword(true)}
+            style={styles.videoBerbayar}
+          >
+            <Text
+              style={[styles.videoBerbayarTitle, { color: colors.primary }]}
+            >
+              Lihat Video Berbayar
+            </Text>
+          </TouchableOpacity>
           <View style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Web</Text>
           </View>
@@ -853,6 +893,16 @@ const OurStaff = ({ navigation }) => {
         visible={modalInvestation}
         onClose={() => setModalInvestation(false)}
       />
+      <ModalPassword
+        visible={modalPassword}
+        onSubmit={() => {
+          setModalPassword(false);
+          navigation.navigate("PaidVideo");
+        }}
+        onClose={() => {
+          setModalPassword(false);
+        }}
+      />
     </View>
   );
 };
@@ -871,9 +921,20 @@ const styles = StyleSheet.create({
 
     elevation: 4,
   },
+  videoBerbayar: {
+    height: 40,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: colors.border,
+  },
+  videoBerbayarTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   searchInput: {
     borderWidth: 1,
-    marginHorizontal: 12,
+    marginHorizontal: 16,
     borderRadius: 5,
     borderColor: colors.border,
   },

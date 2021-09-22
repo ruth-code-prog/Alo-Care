@@ -19,6 +19,7 @@ import UserInvestation from "./UserInvestation";
 import ListTransaction from "./ListTransaction";
 import TransactionDetail from "./TransactionDetail";
 import MemberAlocare from "./MemberAlocare";
+import PaidVideo from "./PaidVideo";
 
 export {
   Splash,
@@ -42,4 +43,5 @@ export {
   ListTransaction,
   TransactionDetail,
   MemberAlocare,
+  PaidVideo,
 };

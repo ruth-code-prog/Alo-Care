@@ -22,6 +22,7 @@ import {
   ListTransaction,
   TransactionDetail,
   MemberAlocare,
+  PaidVideo,
 } from "../pages";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigator } from "../components";
@@ -131,6 +132,11 @@ export default function Router() {
       <Stack.Screen
         name="MemberAlocare"
         component={MemberAlocare}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PaidVideo"
+        component={PaidVideo}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
