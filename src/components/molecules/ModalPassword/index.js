@@ -4,7 +4,7 @@ import { Button, Gap, Input } from "../..";
 import { Fire } from "../../../config";
 import { colors } from "../../../utils";
 
-const ModalPassword = ({ visible, onSubmit, onClose }) => {
+const ModalPassword = ({ visible, onSubmit, onClose, type }) => {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState(null);
 
@@ -13,23 +13,28 @@ const ModalPassword = ({ visible, onSubmit, onClose }) => {
       return Alert.alert("Password wajib diisi");
     }
 
-    setLoading(true);
-    Fire.database()
-      .ref("video_password")
-      .once("value")
-      .then((snapshot) => {
-        console.log(snapshot.val());
-        if (snapshot.val() === password) {
-          onSubmit && onSubmit();
-        } else {
-          Alert.alert("Password yang Anda masukkan salah");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+    if (type !== "simple") {
+      setLoading(true);
+      Fire.database()
+        .ref("video_password")
+        .once("value")
+        .then((snapshot) => {
+          console.log(snapshot.val());
+          if (snapshot.val() === password) {
+            onSubmit && onSubmit();
+          } else {
+            Alert.alert("Password yang Anda masukkan salah");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
+    } else {
+      onSubmit && onSubmit(password);
+    }
+    setPassword(null);
   };
 
   return (

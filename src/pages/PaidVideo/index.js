@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -9,7 +10,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Gap, Header, Input, VideoPlayer } from "../../components";
+import {
+  Gap,
+  Header,
+  Input,
+  ModalPassword,
+  VideoPlayer,
+} from "../../components";
 import { Fire } from "../../config";
 import { colors } from "../../utils";
 
@@ -20,6 +27,9 @@ const PaidVideo = ({ navigation }) => {
 
   const [videoLink, setVideoLink] = useState("");
   const [videoModal, setVideoModal] = useState("");
+  const [modalPassword, setModalPassword] = useState(false);
+  const [selectedPassword, setSelectedPassword] = useState(null);
+  const [selectedLink, setSelectedLink] = useState(null);
 
   useEffect(() => {
     getData();
@@ -71,8 +81,14 @@ const PaidVideo = ({ navigation }) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                setVideoLink(item?.link);
-                setVideoModal(true);
+                if (item?.password) {
+                  setSelectedPassword(item?.password);
+                  setSelectedLink(item?.link);
+                  setModalPassword(true);
+                } else {
+                  setVideoLink(item?.link);
+                  setVideoModal(true);
+                }
               }}
               activeOpacity={0.8}
               style={styles.videoContainer}
@@ -87,7 +103,7 @@ const PaidVideo = ({ navigation }) => {
                   lineBreakMode="tail"
                   style={styles.body}
                 >
-                  {item?.body} alksdjalskdjlaksjdaklsjdklasjd
+                  {item?.body}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -100,6 +116,22 @@ const PaidVideo = ({ navigation }) => {
         link={videoLink}
         visible={videoModal}
         onClose={() => setVideoModal(false)}
+      />
+      <ModalPassword
+        type="simple"
+        visible={modalPassword}
+        onSubmit={(password) => {
+          if (password !== selectedPassword) {
+            Alert.alert("Password yang ada masukkan salah");
+          } else {
+            setModalPassword(false);
+            setVideoLink(selectedLink);
+            setVideoModal(true);
+          }
+        }}
+        onClose={() => {
+          setModalPassword(false);
+        }}
       />
     </View>
   );
