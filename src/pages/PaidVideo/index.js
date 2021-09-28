@@ -28,6 +28,9 @@ const PaidVideo = ({ navigation }) => {
   const [videoLink, setVideoLink] = useState("");
   const [videoModal, setVideoModal] = useState("");
   const [modalPassword, setModalPassword] = useState(false);
+  const [withChat, setWithChat] = useState(false);
+  const [selectedWithChat, setSelectedWithChat] = useState(false);
+
   const [selectedPassword, setSelectedPassword] = useState(null);
   const [selectedLink, setSelectedLink] = useState(null);
 
@@ -84,9 +87,11 @@ const PaidVideo = ({ navigation }) => {
                 if (item?.password) {
                   setSelectedPassword(item?.password);
                   setSelectedLink(item?.link);
+                  setSelectedWithChat(item?.withChat);
                   setModalPassword(true);
                 } else {
                   setVideoLink(item?.link);
+                  setSelectedWithChat(item?.withChat);
                   setVideoModal(true);
                 }
               }}
@@ -116,6 +121,7 @@ const PaidVideo = ({ navigation }) => {
         link={videoLink}
         visible={videoModal}
         onClose={() => setVideoModal(false)}
+        withChat={withChat}
       />
       <ModalPassword
         type="simple"
@@ -125,6 +131,7 @@ const PaidVideo = ({ navigation }) => {
             Alert.alert("Password yang ada masukkan salah");
           } else {
             setModalPassword(false);
+            setWithChat(selectedWithChat)
             setVideoLink(selectedLink);
             setVideoModal(true);
           }

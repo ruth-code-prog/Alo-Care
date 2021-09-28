@@ -10,6 +10,7 @@ const InputChat = ({
   onUploadPress,
   targetChat,
   type,
+  noImage,
 }) => {
   return (
     <View style={styles.container}>
@@ -23,11 +24,13 @@ const InputChat = ({
         value={value}
         onChangeText={onChangeText}
       />
-      <Button
-        disable={value.length < 1}
-        type="btn-icon-photo"
-        onPress={() => onUploadPress && onUploadPress()}
-      />
+      {noImage ? null : (
+        <Button
+          disable={value.length < 1}
+          type="btn-icon-photo"
+          onPress={() => onUploadPress && onUploadPress()}
+        />
+      )}
       <Button
         disable={value.length < 1}
         type="btn-icon-send"
