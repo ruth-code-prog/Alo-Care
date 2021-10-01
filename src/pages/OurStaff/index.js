@@ -23,6 +23,7 @@ import {
   HomeProfile,
   ModalInvestation,
   ModalPassword,
+  ModalPoint,
   NewsItem,
   OurStaffCategory,
   ProductCard,
@@ -47,6 +48,25 @@ import {
 const MemoView = memo(View);
 const MemoTouchableOpacity = memo(TouchableOpacity);
 
+const CATEGORY_DATA = [
+  {
+    title: "Finance",
+    image: require("../../assets/images/finance.png"),
+  },
+  {
+    title: "Video Edukasi & Meeting Room",
+    image: require("../../assets/images/video.png"),
+  },
+  {
+    title: "Product",
+    image: require("../../assets/images/product.png"),
+  },
+  {
+    title: "Website",
+    image: require("../../assets/images/website.png"),
+  },
+];
+
 const OurStaff = ({ navigation }) => {
   const [news, setNews] = useState([]);
   const [allNews, setAllNews] = useState([]);
@@ -65,6 +85,7 @@ const OurStaff = ({ navigation }) => {
   const [searchProduct2Loading, setSearchProduct2Loading] = useState(false);
   const [searchProduct3Loading, setSearchProduct3Loading] = useState(false);
   const [userHomeData, setUserHomeData] = useState({});
+  const [modalPointVisible, setModalPointVisible] = useState(true);
 
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
@@ -81,6 +102,8 @@ const OurStaff = ({ navigation }) => {
   const [videoLink, setVideoLink] = useState("");
   const [videoModal, setVideoModal] = useState(false);
   const [modalPassword, setModalPassword] = useState(false);
+
+  const [pointImage, setPointImage] = useState("");
 
   const [userWishlist, setUserWishlist] = useFormSoul({
     product1: [],
@@ -108,6 +131,7 @@ const OurStaff = ({ navigation }) => {
     getUserList();
     getTopInvestor();
     getMember();
+    getPointImage();
   }, []);
 
   useFocusEffect(
@@ -154,8 +178,18 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, [userWishlist]);
+
+  const getPointImage = () => {
+    Fire.database()
+      .ref("point_popup_image")
+      .once("value")
+      .then((res) => {
+        console.log("poinntt", res.val());
+        setPointImage(res.val());
+      });
+  };
 
   const getMember = () => {
     Fire.database()
@@ -606,9 +640,7 @@ const OurStaff = ({ navigation }) => {
               ) : null}
             </MemoView>
 
-            <Text style={styles.welcome}>
-              Chat Staff dan Layanan Kami
-            </Text>
+            <Text style={styles.welcome}>Chat Staff dan Layanan Kami</Text>
           </MemoView>
           <MemoView style={styles.wrapperScroll}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -644,6 +676,20 @@ const OurStaff = ({ navigation }) => {
                 />
               );
             })}
+            <Text style={styles.sectionLabel}>Fitur Alo Care</Text>
+            <MemoView style={styles.categoryContainer}>
+              {CATEGORY_DATA.map((item, index) => (
+                <View style={styles.categoryItem} key={index}>
+                  <Image
+                    style={styles.imageCategory}
+                    source={
+                      item?.image || require("../../assets/images/finance.png")
+                    }
+                  />
+                  <Text style={styles.titleCategory}>{item?.title}</Text>
+                </View>
+              ))}
+            </MemoView>
             <Text style={styles.sectionLabel}>Video Trending</Text>
           </MemoView>
           <View>
@@ -872,7 +918,9 @@ const OurStaff = ({ navigation }) => {
           </ScrollView>
           <View style={{ paddingHorizontal: 16, marginBottom: 40 }}>
             <View style={styles.userInvestationTitleContainer}>
-              <Text style={styles.userInvestationTitle}>Reseller Produk Alo Care</Text>
+              <Text style={styles.userInvestationTitle}>
+                Reseller Produk Alo Care
+              </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("MemberAlocare")}
               >
@@ -903,6 +951,12 @@ const OurStaff = ({ navigation }) => {
           setModalPassword(false);
         }}
       />
+      <ModalPoint
+        image={pointImage}
+        point={userHomeData?.point_user}
+        visible={modalPointVisible}
+        onClose={() => setModalPointVisible(false)}
+      />
     </View>
   );
 };
@@ -920,6 +974,26 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 4,
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  categoryItem: {
+    flexBasis: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    paddingHorizontal: 24,
+  },
+  imageCategory: {
+    width: 120,
+    height: 120,
+  },
+  titleCategory: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 8,
   },
   videoBerbayar: {
     height: 40,
