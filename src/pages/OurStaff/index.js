@@ -178,7 +178,7 @@ const OurStaff = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // getProducts();
+    getProducts();
   }, [userWishlist]);
 
   const getPointImage = () => {
