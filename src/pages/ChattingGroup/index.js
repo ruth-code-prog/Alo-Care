@@ -164,20 +164,23 @@ const ChattingGroup = ({ navigation, route }) => {
   };
 
   const getImage = () => {
-    launchImageLibrary({ quality: 0.5, includeBase64: true }, (response) => {
-      if (response.didCancel || response.error) {
-        showError("oops, sepertinya anda tidak memilih foto nya?");
-      } else {
-        const source = { uri: response.uri };
-        setPhoto(`data:${response?.type};base64, ${response?.base64}`);
+    launchImageLibrary(
+      { quality: 0.5, includeBase64: true, maxWidth: 480, maxHeight: 240 },
+      (response) => {
+        if (response.didCancel || response.error) {
+          showError("oops, sepertinya anda tidak memilih foto nya?");
+        } else {
+          const source = { uri: response.uri };
+          setPhoto(`data:${response?.type};base64, ${response?.base64}`);
+        }
       }
-    });
+    );
   };
 
   return (
     <View style={styles.page}>
       <Header
-        type="dark-profile"
+        type='dark-profile'
         title={"Komunitas Alo Care"}
         desc={"Alo Care"}
         onPress={() => navigation.goBack()}
@@ -225,7 +228,7 @@ const ChattingGroup = ({ navigation, route }) => {
         onUploadPress={getImage}
         onChangeText={(value) => setChatContent(value)}
         onButtonPress={() => chatSend()}
-        type="group"
+        type='group'
       />
     </View>
   );
