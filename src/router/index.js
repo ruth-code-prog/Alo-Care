@@ -23,6 +23,10 @@ import {
   TransactionDetail,
   MemberAlocare,
   PaidVideo,
+  FinancePage,
+  VideoPage,
+  ProductPage,
+  WebsitePage,
 } from "../pages";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigator } from "../components";
@@ -137,6 +141,26 @@ export default function Router() {
       <Stack.Screen
         name="PaidVideo"
         component={PaidVideo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FinancePage"
+        component={FinancePage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VideoPage"
+        component={VideoPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProductPage"
+        component={ProductPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="WebsitePage"
+        component={WebsitePage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

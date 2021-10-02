@@ -52,46 +52,35 @@ const CATEGORY_DATA = [
   {
     title: "Finance",
     image: require("../../assets/images/finance.png"),
+    page: "FinancePage",
   },
   {
     title: "Video Edukasi & Meeting Room",
     image: require("../../assets/images/video.png"),
+    page: "VideoPage",
   },
   {
     title: "Product",
     image: require("../../assets/images/product.png"),
+    page: "ProductPage",
   },
   {
     title: "Website",
     image: require("../../assets/images/website.png"),
+    page: "WebsitePage",
   },
 ];
 
 const OurStaff = ({ navigation }) => {
-  const [news, setNews] = useState([]);
-  const [allNews, setAllNews] = useState([]);
-  const [newsLoading, setNewsLoading] = useState(false);
-
-  const [web, setWeb] = useState([]);
   const [categoryOurstaff, setCategoryOurstaff] = useState([]);
   const [ourstaffs, setOurstaffs] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [productsAll, setProductsAll] = useState([]);
-  const [products2, setProducts2] = useState([]);
-  const [productsAll2, setProducts2All] = useState([]);
-  const [products3, setProducts3] = useState([]);
-  const [productsAll3, setProducts3All] = useState([]);
-  const [searchProductLoading, setSearchProductLoading] = useState(false);
-  const [searchProduct2Loading, setSearchProduct2Loading] = useState(false);
-  const [searchProduct3Loading, setSearchProduct3Loading] = useState(false);
+
   const [userHomeData, setUserHomeData] = useState({});
   const [modalPointVisible, setModalPointVisible] = useState(true);
 
   const [banners, setBanners] = useState([]);
   const [runningText, setRunningText] = useState(null);
   const [modalInvestation, setModalInvestation] = useState(false);
-  const [topInvestor, setTopInvestor] = useState({});
-  const [memberData, setMemberData] = useState({});
 
   const { token } = useSelector((state) => state.fcm);
   const [profile, setProfile] = useState({
@@ -99,9 +88,6 @@ const OurStaff = ({ navigation }) => {
     fullName: "",
     profession: "",
   });
-  const [videoLink, setVideoLink] = useState("");
-  const [videoModal, setVideoModal] = useState(false);
-  const [modalPassword, setModalPassword] = useState(false);
 
   const [pointImage, setPointImage] = useState("");
 
@@ -117,9 +103,6 @@ const OurStaff = ({ navigation }) => {
     getCategoryOurstaff();
     getTopRatedOurstaffs();
 
-    getNews();
-    getWeb();
-
     navigation.addListener("focus", () => {
       getUserData();
     });
@@ -129,8 +112,6 @@ const OurStaff = ({ navigation }) => {
     getBanners();
     getRunningText();
     getUserList();
-    getTopInvestor();
-    getMember();
     getPointImage();
   }, []);
 
@@ -177,10 +158,6 @@ const OurStaff = ({ navigation }) => {
     setTokenToFirebase();
   }, []);
 
-  useEffect(() => {
-    getProducts();
-  }, [userWishlist]);
-
   const getPointImage = () => {
     Fire.database()
       .ref("point_popup_image")
@@ -188,19 +165,6 @@ const OurStaff = ({ navigation }) => {
       .then((res) => {
         console.log("poinntt", res.val());
         setPointImage(res.val());
-      });
-  };
-
-  const getMember = () => {
-    Fire.database()
-      .ref(`member_alocare`)
-      .limitToFirst(1)
-      .once("value")
-      .then((snapshot) => {
-        const dataSnapshot = snapshot.val();
-        if (dataSnapshot) {
-          setMemberData(dataSnapshot?.filter((val) => val)[0]);
-        }
       });
   };
 
@@ -297,39 +261,6 @@ const OurStaff = ({ navigation }) => {
       });
   };
 
-  const getNews = () => {
-    Fire.database()
-      .ref("news/")
-      .once("value")
-      .then((res) => {
-        if (res.val()) {
-          const data = res.val();
-          const filterData = data.filter((el) => el !== null);
-          setNews(filterData);
-          setAllNews(filterData);
-        }
-      })
-      .catch((err) => {
-        showError(err.message);
-      });
-  };
-
-  const getWeb = () => {
-    Fire.database()
-      .ref("webs/")
-      .once("value")
-      .then((res) => {
-        if (res.val()) {
-          const data = res.val();
-          const filterData = data.filter((el) => el !== null);
-          setWeb(filterData);
-        }
-      })
-      .catch((err) => {
-        showError(err.message);
-      });
-  };
-
   const getUserData = () => {
     getData("user").then((res) => {
       const data = res;
@@ -346,38 +277,6 @@ const OurStaff = ({ navigation }) => {
           setUserHomeData(snapshot.val());
         }
       });
-  };
-
-  const getProducts = async () => {
-    setSearchProductLoading(true);
-    setSearchProduct2Loading(true);
-    setSearchProduct3Loading(true);
-
-    await Fire.database()
-      .ref("produk")
-      .on("value", (res) => {
-        const arr = [...res.val()];
-        setProducts(arr.filter((val) => val !== null));
-        setProductsAll(arr.filter((val) => val !== null));
-      });
-    await Fire.database()
-      .ref("produk2")
-      .on("value", (res) => {
-        const arr = [...res.val()];
-        setProducts2(arr.filter((val) => val !== null));
-        setProducts2All(arr.filter((val) => val !== null));
-      });
-
-    await Fire.database()
-      .ref("produk3")
-      .on("value", (res) => {
-        const arr = [...res.val()];
-        setProducts3(arr.filter((val) => val !== null));
-        setProducts3All(arr.filter((val) => val !== null));
-      });
-    setSearchProductLoading(false);
-    setSearchProduct2Loading(false);
-    setSearchProduct3Loading(false);
   };
 
   const getBanners = () => {
@@ -402,149 +301,6 @@ const OurStaff = ({ navigation }) => {
       .once("value")
       .then((res) => {
         setRunningText(res?.val());
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const renderNews = () => {
-    if (news.length > 0) {
-      let listNews = news.map((item) => {
-        if (item) {
-          return (
-            <MemoTouchableOpacity
-              onPress={() => {
-                setVideoLink(item?.link);
-                setVideoModal(true);
-              }}
-              key={item.id}
-            >
-              <NewsItem
-                key={item.id}
-                title={item.title}
-                body={item.body}
-                date={item.date}
-                image={item.image}
-              />
-            </MemoTouchableOpacity>
-          );
-        }
-      });
-
-      return listNews;
-    } else {
-      return null;
-    }
-  };
-
-  const renderWeb = () => {
-    if (web.length > 0) {
-      let listweb = web.map((item) => {
-        if (item) {
-          return (
-            <MemoTouchableOpacity
-              onPress={() => openWeb(item.link)}
-              key={item.id}
-            >
-              <WebItem
-                key={item.id}
-                title={item.title}
-                body={item.body}
-                date={item.date}
-                image={item.image}
-              />
-            </MemoTouchableOpacity>
-          );
-        }
-      });
-
-      return listweb;
-    } else {
-      return null;
-    }
-  };
-
-  const openNews = (url) => {
-    Linking.openURL("vnd.youtube://www.youtube.com/watch?v=" + url);
-  };
-  const openWeb = (url) => {
-    Linking.openURL("https://" + url);
-  };
-
-  const handleNewsFilter = (val) => {
-    setNewsLoading(true);
-    let arr = [...allNews];
-    var searchRegex = new RegExp(val, "i");
-    arr = arr.filter((item) => searchRegex?.test(item?.title));
-    setNews(arr);
-    setTimeout(() => {
-      setNewsLoading(false);
-    }, 1500);
-  };
-  const handleFilter = (val, productType) => {
-    if (productType === "1") {
-      setSearchProductLoading(true);
-      let arr = [...productsAll];
-      var searchRegex = new RegExp(val, "i");
-      arr = arr.filter((item) => searchRegex?.test(item?.title));
-      setProducts(arr);
-      setTimeout(() => {
-        setSearchProductLoading(false);
-      }, 1500);
-    } else if (productType === "2") {
-      setSearchProduct2Loading(true);
-      let arr = [...productsAll2];
-      var searchRegex = new RegExp(val, "i");
-      arr = arr.filter((item) => searchRegex?.test(item?.title));
-      setProducts2(arr);
-      setTimeout(() => {
-        setSearchProduct2Loading(false);
-      }, 1500);
-    } else if (productType === "3") {
-      setSearchProduct3Loading(true);
-      let arr = [...productsAll3];
-      var searchRegex = new RegExp(val, "i");
-      arr = arr.filter((item) => searchRegex?.test(item?.title));
-      setProducts3(arr);
-      setTimeout(() => {
-        setSearchProduct3Loading(false);
-      }, 1500);
-    }
-  };
-
-  const handleBuy = (item) => {
-    navigation.navigate("Chatting", {
-      data: ourstaffs[0]?.data,
-      chatContent: `Saya ingin membeli produk ${item?.title}`,
-    });
-  };
-
-  const handleRemoveFavorite = (item, type) => {
-    let arr = [...userWishlist[type]];
-    arr = arr?.filter((val) => JSON.stringify(val) !== JSON.stringify(item));
-
-    setUserWishlist({
-      [type]: arr,
-    });
-  };
-
-  const handleAddFavorite = (item, type) => {
-    let arr = [...userWishlist[type]];
-    arr?.push(item);
-    setUserWishlist({
-      [type]: arr,
-    });
-  };
-
-  const getTopInvestor = () => {
-    Fire.database()
-      .ref("user_investasi")
-      .limitToFirst(1)
-      .once("value")
-      .then((res) => {
-        let filtered = res?.val().filter((val) => val);
-        setTopInvestor(filtered[0]);
       })
       .catch((err) => {
         console.error(err);
@@ -679,7 +435,18 @@ const OurStaff = ({ navigation }) => {
             <Text style={styles.sectionLabel}>Fitur Alo Care</Text>
             <MemoView style={styles.categoryContainer}>
               {CATEGORY_DATA.map((item, index) => (
-                <View style={styles.categoryItem} key={index}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(
+                      item?.page,
+                      item.page === "ProductPage"
+                        ? { userHomeData, ourstaffs }
+                        : {}
+                    );
+                  }}
+                  style={styles.categoryItem}
+                  key={index}
+                >
                   <Image
                     style={styles.imageCategory}
                     source={
@@ -687,270 +454,20 @@ const OurStaff = ({ navigation }) => {
                     }
                   />
                   <Text style={styles.titleCategory}>{item?.title}</Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </MemoView>
-            <Text style={styles.sectionLabel}>Video Trending</Text>
           </MemoView>
-          <View>
-            <TextInput
-              onChangeText={(val) => handleNewsFilter(val)}
-              selectTextOnFocus
-              style={styles.searchInput}
-              placeholder="Cari Video Trending"
-            />
-          </View>
-          {newsLoading ? (
-            <View style={{ padding: 20 }}>
-              <ActivityIndicator size={24} color={colors.primary} />
-            </View>
-          ) : (
-            renderNews()
-          )}
-          <TouchableOpacity
-            onPress={() => setModalPassword(true)}
-            style={styles.videoBerbayar}
-          >
-            <Text
-              style={[styles.videoBerbayarTitle, { color: colors.primary }]}
-            >
-              Lihat Video Berbayar
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.wrapperSection}>
-            <Text style={styles.sectionLabel}>Web</Text>
-          </View>
-          {renderWeb()}
-          <Gap height={30} />
-          <View style={{ paddingHorizontal: 16 }}>
-            <View style={styles.userInvestationTitleContainer}>
-              <Text style={styles.userInvestationTitle}>
-                Alo Care User Investasi
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("UserInvestation")}
-              >
-                <Text style={{ color: colors.primary }}>Lihat Semua </Text>
-              </TouchableOpacity>
-            </View>
-            <Gap height={16} />
-            <UserInvestationCard item={topInvestor} />
-          </View>
-          <Gap height={30} />
-          <Text style={styles.transaksi}>Transaksi</Text>
-          <Text style={styles.pm}>Pembiayaan Multiguna</Text>
-          <View style={styles.garis} />
-          <MemoView style={styles.tagihan1}>
-            <ScrollView
-              contentContainerStyle={{ padding: 20 }}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            >
-              <TenorCard
-                tenor={userHomeData?.tenor1 || 0}
-                tagihan={CurrencyFormatter(userHomeData?.tagihan1 || 0)}
-                jatuhTempo={userHomeData?.tempo1 || 0}
-              />
-              <View style={{ marginRight: 16 }} />
-              <TenorCard
-                tenor={userHomeData?.tenor2 || 0}
-                tagihan={CurrencyFormatter(userHomeData?.tagihan2 || 0)}
-                jatuhTempo={userHomeData?.tempo2 || 0}
-              />
-              <View style={{ marginRight: 16 }} />
-              <TenorCard
-                tenor={userHomeData?.tenor3 || 0}
-                tagihan={CurrencyFormatter(userHomeData?.tagihan3 || 0)}
-                jatuhTempo={userHomeData?.tempo3 || 0}
-              />
-            </ScrollView>
-          </MemoView>
-          <MemoTouchableOpacity
-            onPress={() => {
-              navigation.navigate("Chatting", {
-                data: ourstaffs[0]?.data,
-                chatContent: `Saya ingin mengajukan Pinjaman`,
-              });
-            }}
-          >
-            <Image
-              source={require("../../assets/dummy/pinjam.png")}
-              style={{ width: 45, height: 42, marginLeft: 10 }}
-              resizeMode={"contain"}
-            />
-            <Text style={{ marginLeft: 16 }}>Pinjam</Text>
-          </MemoTouchableOpacity>
 
-          <View>
-            <Text
-              style={{
-                marginTop: 10,
-                fontWeight: "bold",
-                color: "#2d3436",
-                marginHorizontal: 10,
-              }}
-            >
-              Produk
-            </Text>
-            <Gap height={16} />
-            <TextInput
-              onChangeText={(val) => handleFilter(val, "1")}
-              selectTextOnFocus
-              style={styles.searchInput}
-              placeholder="Cari Produk"
-            />
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 10, paddingHorizontal: 10 }}
-          >
-            {searchProductLoading ? (
-              <ActivityIndicator
-                size={40}
-                color={colors.primary}
-                style={{ marginVertical: 40, marginLeft: 40 }}
-              />
-            ) : (
-              products?.map((item, index) => (
-                <ProductCard
-                  onRemove={() => handleRemoveFavorite(item, "product1")}
-                  onAdd={() => handleAddFavorite(item, "product1")}
-                  product={userWishlist?.product1}
-                  uid={userHomeData?.uid}
-                  onPress={() => handleBuy(item)}
-                  type="produk"
-                  key={index}
-                  item={item}
-                />
-              ))
-            )}
-          </ScrollView>
-          <View>
-            <Text
-              style={{
-                marginTop: 10,
-                fontWeight: "bold",
-                color: "#2d3436",
-                marginHorizontal: 10,
-              }}
-            >
-              Makanan dan Minuman
-            </Text>
-            <Gap height={16} />
-            <TextInput
-              onChangeText={(val) => handleFilter(val, "2")}
-              selectTextOnFocus
-              style={styles.searchInput}
-              placeholder="Cari Makanan dan Minuman"
-            />
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 10, paddingHorizontal: 10 }}
-          >
-            {searchProduct2Loading ? (
-              <ActivityIndicator
-                size={40}
-                color={colors.primary}
-                style={{ marginVertical: 40, marginLeft: 40 }}
-              />
-            ) : (
-              products2?.map((item, index) => (
-                <ProductCard
-                  onRemove={() => handleRemoveFavorite(item, "product2")}
-                  onAdd={() => handleAddFavorite(item, "product2")}
-                  product={userWishlist?.product2}
-                  uid={userHomeData?.uid}
-                  onPress={() => handleBuy(item)}
-                  type="produk2"
-                  key={index}
-                  item={item}
-                />
-              ))
-            )}
-          </ScrollView>
-          <View>
-            <Text
-              style={{
-                marginTop: 10,
-                fontWeight: "bold",
-                color: "#2d3436",
-                marginHorizontal: 10,
-              }}
-            >
-              Kosmetik dan Obat
-            </Text>
-            <Gap height={16} />
-            <TextInput
-              onChangeText={(val) => handleFilter(val, "3")}
-              selectTextOnFocus
-              style={styles.searchInput}
-              placeholder="Cari Kosmetik dan Obat"
-            />
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 10, paddingHorizontal: 10 }}
-          >
-            {searchProduct3Loading ? (
-              <ActivityIndicator
-                size={40}
-                color={colors.primary}
-                style={{ marginVertical: 40, marginLeft: 40 }}
-              />
-            ) : (
-              products3?.map((item, index) => (
-                <ProductCard
-                  onRemove={() => handleRemoveFavorite(item, "product3")}
-                  onAdd={() => handleAddFavorite(item, "product3")}
-                  product={userWishlist?.product3}
-                  uid={userHomeData?.uid}
-                  onPress={() => handleBuy(item)}
-                  type="produk3"
-                  key={index}
-                  item={item}
-                />
-              ))
-            )}
-          </ScrollView>
-          <View style={{ paddingHorizontal: 16, marginBottom: 40 }}>
-            <View style={styles.userInvestationTitleContainer}>
-              <Text style={styles.userInvestationTitle}>
-                Reseller Produk Alo Care
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("MemberAlocare")}
-              >
-                <Text style={{ color: colors.primary }}>Lihat Semua </Text>
-              </TouchableOpacity>
-            </View>
-            <Gap height={16} />
-            <UserInvestationCard type="member" item={memberData} />
-          </View>
+          <Gap height={30} />
         </ScrollView>
       </View>
-      <VideoPlayer
-        link={videoLink}
-        visible={videoModal}
-        onClose={() => setVideoModal(false)}
-      />
+
       <ModalInvestation
         visible={modalInvestation}
         onClose={() => setModalInvestation(false)}
       />
-      <ModalPassword
-        visible={modalPassword}
-        onSubmit={() => {
-          setModalPassword(false);
-          navigation.navigate("PaidVideo");
-        }}
-        onClose={() => {
-          setModalPassword(false);
-        }}
-      />
+
       <ModalPoint
         image={pointImage}
         point={userHomeData?.point_user}
@@ -994,23 +511,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
-  },
-  videoBerbayar: {
-    height: 40,
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: colors.border,
-  },
-  videoBerbayarTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  searchInput: {
-    borderWidth: 1,
-    marginHorizontal: 16,
-    borderRadius: 5,
-    borderColor: colors.border,
   },
   runningTextContainer: {
     flexDirection: "row",
@@ -1061,17 +561,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 16,
     fontWeight: "bold",
-  },
-  userInvestationTitle: {
-    fontSize: 16,
-    fontFamily: fonts.primary[600],
-    color: colors.text.primary,
-    fontWeight: "bold",
-  },
-  userInvestationTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   transaksi: {
     fontSize: 16,

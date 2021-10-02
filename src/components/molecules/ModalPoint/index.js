@@ -17,7 +17,7 @@ const ModalPoint = ({ image, point, visible, onClose }) => {
         <View>
           <Image style={styles.image} source={{ uri: image }} />
           <TouchableOpacity activeOpacity={1} style={styles.btn}>
-            <Text style={styles.textPoint}>Point Anda: {point}</Text>
+            <Text style={styles.textPoint}>Point Anda: {point || 0}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => onClose && onClose()}

@@ -20,6 +20,10 @@ import ListTransaction from "./ListTransaction";
 import TransactionDetail from "./TransactionDetail";
 import MemberAlocare from "./MemberAlocare";
 import PaidVideo from "./PaidVideo";
+import FinancePage from "./FinancePage";
+import VideoPage from "./VideoPage";
+import ProductPage from "./ProductPage";
+import WebsitePage from "./WebsitePage";
 
 export {
   Splash,
@@ -44,4 +48,8 @@ export {
   TransactionDetail,
   MemberAlocare,
   PaidVideo,
+  FinancePage,
+  VideoPage,
+  ProductPage,
+  WebsitePage,
 };
