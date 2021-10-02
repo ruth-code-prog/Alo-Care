@@ -199,20 +199,23 @@ const Chatting = ({ navigation, route }) => {
   };
 
   const getImage = () => {
-    launchImageLibrary({ quality: 0.5, includeBase64: true }, (response) => {
-      if (response.didCancel || response.error) {
-        showError("oops, sepertinya anda tidak memilih foto nya?");
-      } else {
-        const source = { uri: response.uri };
-        setPhoto(`data:${response?.type};base64, ${response?.base64}`);
+    launchImageLibrary(
+      { quality: 0.5, includeBase64: true, maxWidth: 480, maxHeight: 240 },
+      (response) => {
+        if (response.didCancel || response.error) {
+          showError("oops, sepertinya anda tidak memilih foto nya?");
+        } else {
+          const source = { uri: response.uri };
+          setPhoto(`data:${response?.type};base64, ${response?.base64}`);
+        }
       }
-    });
+    );
   };
 
   return (
     <View style={styles.page}>
       <Header
-        type="dark-profile"
+        type='dark-profile'
         title={dataOurstaff.data.fullName}
         desc={dataOurstaff.data.category}
         photo={{ uri: dataOurstaff.data.photo }}
@@ -225,6 +228,10 @@ const Chatting = ({ navigation, route }) => {
           onContentSizeChange={() => scrollRef.current.scrollToEnd()}
         >
           {chatData.map((chat) => {
+            console.log(
+              "🚀 ~ file: index.js ~ line 247 ~ {chatData.map ~ chat",
+              chat
+            );
             return (
               <View key={chat.id}>
                 <Text style={styles.chatDate}>{chat.id}</Text>

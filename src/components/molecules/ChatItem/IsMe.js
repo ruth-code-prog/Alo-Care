@@ -27,7 +27,8 @@ const IsMe = ({ text, date, type }) => {
                 width: Dimensions.get("screen").width / 3,
                 height: 240,
               }}
-              resizeMode="cover"
+              resizeMethod={"resize"}
+              resizeMode='cover'
             />
           </TouchableOpacity>
         ) : (
